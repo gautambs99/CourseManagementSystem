@@ -1,0 +1,192 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 50px auto;
+    width: 50%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Header Styling */
+h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Form Styling */
+form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+    width: 120px; /* Fixed width for alignment */
+    text-align: right;
+}
+
+input,
+textarea,
+select {
+    width: 60%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+textarea {
+    resize: none;
+    height: 80px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 150px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.nav-button {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: red;
+    width: 150px;
+}
+
+.logout-button:hover {
+    background-color: darkred;
+}
+
+/* Form Styling */
+.form-horizontal {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Adds space between the search bar and button */
+    margin-top: 20px;
+}
+
+.form-control {
+    width: 65%;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+}
+
+/* Button Styling */
+.btn-primary {
+    padding: 10px 25px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Center Image */
+.grid-container {
+    display: flex; /* Change from grid to flex for centering */
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.grid-item {
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    form {
+        gap: 10px;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 80%;
+    }
+
+    button {
+        width: 100px;
+    }
+}
