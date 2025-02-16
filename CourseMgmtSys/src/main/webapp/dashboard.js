@@ -7,32 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return
   }
 
-  // Update page title based on user type
-  const pageTitle = document.querySelector("h1")
-  pageTitle.textContent = `${userType.charAt(0).toUpperCase() + userType.slice(1)} Services`
-
-  // Customize services based on user type
-  const serviceCards = document.querySelectorAll(".service-card")
-
-  // Show/hide specific services based on user type
-  serviceCards.forEach((card) => {
-    const title = card.querySelector("h3").textContent.toLowerCase()
-
-    switch (userType) {
-      case "student":
-        if (title.includes("database") || title.includes("seo")) {
-          card.style.display = "none"
-        }
-        break
-      case "faculty":
-        if (title.includes("graphic") || title.includes("seo")) {
-          card.style.display = "none"
-        }
-        break
-      case "staff":
-        // Staff can see all services
-        break
-    }
+  // Handle logout for all user types
+  document.querySelectorAll("#logout").forEach((logoutBtn) => {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+      sessionStorage.clear()
+      window.location.href = "index.html"
+    })
   })
 
   // Show appropriate sidebar and content
@@ -55,15 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
       this.classList.add("active")
 
       // Handle page navigation
-      handleNavigation(page)
+      handleNavigation(userType, page)
     })
-  })
-
-  // Handle logout
-  document.getElementById("logout").addEventListener("click", (e) => {
-    e.preventDefault()
-    sessionStorage.clear()
-    window.location.href = "index.html"
   })
 
   // Handle course search
@@ -114,11 +88,54 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   })
+
+  // Handle file upload (for external institute)
+  const fileUploadForm = document.getElementById("file-upload-form")
+  const uploadStatus = document.getElementById("upload-status")
+
+  if (fileUploadForm) {
+    fileUploadForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+      const fileInput = document.getElementById("file-upload")
+      const fileDescription = document.getElementById("file-description").value
+      const file = fileInput.files[0]
+
+      if (file) {
+        // Simulating file upload process
+        uploadStatus.textContent = "Uploading..."
+        uploadStatus.className = ""
+
+        setTimeout(() => {
+          // Simulated successful upload
+          uploadStatus.textContent = `File "${file.name}" uploaded successfully!`
+          uploadStatus.className = "success"
+          console.log("File uploaded:", file.name)
+          console.log("File description:", fileDescription)
+          fileUploadForm.reset()
+        }, 2000)
+      } else {
+        uploadStatus.textContent = "Please select a file to upload."
+        uploadStatus.className = "error"
+      }
+    })
+  }
+
+  // Show the dashboard page by default
+  handleNavigation(userType, "dashboard")
 })
 
-function handleNavigation(page) {
-  // Implement page navigation logic here
+function handleNavigation(userType, page) {
   console.log("Navigating to:", page)
-  // You would typically show/hide different sections based on the page
+
+  // Hide all pages
+  document.querySelectorAll(".page").forEach((p) => (p.style.display = "none"))
+
+  // Show the selected page
+  const pageToShow = document.getElementById(`${userType}-${page}`)
+  if (pageToShow) {
+    pageToShow.style.display = "block"
+  } else {
+    console.error(`Page not found: ${userType}-${page}`)
+  }
 }
 
