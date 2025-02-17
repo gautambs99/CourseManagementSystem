@@ -34,11 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isValidLogin) {
-      // Store user type in sessionStorage for dashboard use
-      sessionStorage.setItem("userType", userType)
-      // Redirect to dashboard
-      window.location.href = "dashboard.html"
-    } else {
+      sessionStorage.setItem("userType", userType);
+      window.location.href = `${userType}.html`; // Redirect to respective dashboard
+    }
+ else {
       showError("Invalid credentials. Please try again.")
     }
   })

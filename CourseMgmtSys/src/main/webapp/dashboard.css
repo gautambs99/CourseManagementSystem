@@ -322,3 +322,9 @@ select:focus {
   transition: all 0.3s ease-in-out;
 }
 
+.student-content h1 { color: #4caf50; } /* Green */
+.faculty-content h1 { color: #2196F3; } /* Blue */
+.staff-content h1 { color: #FF9800; } /* Orange */
+.external-institute-content h1 { color: #9C27B0; } /* Purple */
+
+

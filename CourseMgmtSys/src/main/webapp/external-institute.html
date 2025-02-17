@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Institute Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="container">
+    <!-- External Institute Sidebar -->
+    <nav class="sidebar external-institute-sidebar">
+        <ul>
+            <li><a href="#" class="active" data-page="dashboard">🏠 Dashboard</a></li>
+            <li><a href="#" data-page="upload-file">📤 Upload File</a></li>
+            <li><a href="#" id="logout">🚪 Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-content external-institute-content">
+            <div class="page" id="external-institute-dashboard">
+                <h1>External Institute Dashboard</h1>
+                <p>Welcome to the External Institute Dashboard. Use the sidebar to navigate.</p>
+            </div>
+            <div class="page" id="external-institute-upload-file" style="display: none;">
+                <h1>Upload File</h1>
+                <div class="admin-panel file-upload-section">
+                    <div class="admin-card">
+                        <form id="file-upload-form">
+                            <div class="form-group">
+                                <label for="file-upload">Select File</label>
+                                <input type="file" id="file-upload" name="file-upload" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="file-description">File Description</label>
+                                <textarea id="file-description" name="file-description" rows="3" placeholder="Enter a brief description of the file"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Upload File</button>
+                        </form>
+                        <div id="upload-status" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>

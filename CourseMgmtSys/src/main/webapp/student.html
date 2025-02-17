@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="container">
+    <!-- Student Sidebar -->
+    <nav class="sidebar student-sidebar">
+        <ul>
+            <li><a href="#" class="active" data-page="dashboard">🏠 Dashboard</a></li>
+            <li><a href="#" data-page="about">👤 About Me</a></li>
+            <li><a href="#" data-page="course-search">🔍 Course Search</a></li>
+            <li><a href="#" id="logout">🚪 Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-content student-content">
+            <div class="page" id="student-dashboard">
+                <h1>Student Dashboard</h1>
+                <p>Welcome to the Student Dashboard. Use the sidebar to navigate.</p>
+            </div>
+            <div class="page" id="student-about" style="display: none;">
+                <h1>About Me</h1>
+                <div class="profile-info">
+                    <p><strong>Student ID:</strong> <span id="student-id">12345</span></p>
+                    <p><strong>Name:</strong> <span id="student-name">John Doe</span></p>
+                    <p><strong>Major:</strong> <span id="student-major">Computer Science</span></p>
+                    <p><strong>Academic Year:</strong> <span id="student-year">2024</span></p>
+                    <p><strong>Email:</strong> <span id="student-email">john.doe@example.com</span></p>
+                </div>
+            </div>
+            <div class="page" id="student-course-search" style="display: none;">
+                <h1>Course Search</h1>
+                <div class="search-box">
+                    <input type="text" placeholder="Search for courses...">
+                    <button class="search-btn">Search</button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>

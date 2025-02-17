@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="container">
+    <!-- Faculty Sidebar -->
+    <nav class="sidebar faculty-sidebar">
+        <ul>
+            <li><a href="#" class="active" data-page="dashboard">🏠 Dashboard</a></li>
+            <li><a href="#" data-page="my-courses">📚 My Courses</a></li>
+            <li><a href="#" data-page="course-search">🔍 Course Search</a></li>
+            <li><a href="#" id="logout">🚪 Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-content faculty-content">
+            <div class="page" id="faculty-dashboard">
+                <h1>Faculty Dashboard</h1>
+                <p>Welcome to the Faculty Dashboard. Use the sidebar to navigate.</p>
+            </div>
+            <div class="page" id="faculty-my-courses" style="display: none;">
+                <h1>My Courses</h1>
+                <div class="course-list">
+                    <div class="course-item">
+                        <h4>CS101 - Introduction to Programming</h4>
+                        <p>Students: 45</p>
+                        <button class="view-details-btn">View Details</button>
+                    </div>
+                    <div class="course-item">
+                        <h4>CS202 - Data Structures</h4>
+                        <p>Students: 38</p>
+                        <button class="view-details-btn">View Details</button>
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="faculty-course-search" style="display: none;">
+                <h1>Course Search</h1>
+                <div class="search-box">
+                    <input type="text" placeholder="Search courses...">
+                    <button class="search-btn">Search</button>
+                </div>
+                <div id="faculty-search-results"></div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>
