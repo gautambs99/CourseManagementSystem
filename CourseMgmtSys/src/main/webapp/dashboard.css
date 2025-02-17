@@ -1,9 +1,9 @@
 :root {
   --primary-color: #4ade80;
-  --bg-dark: #1a1a1a;
-  --bg-darker: #141414;
+  --bg-dark: rgba(26, 26, 26, 0.95);
+  --bg-darker: rgba(20, 20, 20, 0.97);
   --text-light: #ffffff;
-  --card-bg: #202020;
+  --card-bg: rgba(32, 32, 32, 0.95);
   --danger-color: #ff4444;
   --success-color: #00c851;
 }
@@ -16,13 +16,19 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: var(--bg-dark);
+  background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/abstract-wallpaper-preview.jpg-QqjVUFKnz3beOMHbuAovyJdFWYicLj.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--text-light);
+  min-height: 100vh;
 }
 
 .container {
   display: flex;
   min-height: 100vh;
+  backdrop-filter: blur(10px);
 }
 
 /* Sidebar Styles */
@@ -30,6 +36,8 @@ body {
   width: 250px;
   background-color: var(--bg-darker);
   padding: 2rem 1rem;
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar ul {
@@ -52,7 +60,7 @@ body {
 
 .sidebar a:hover,
 .sidebar a.active {
-  background-color: rgba(74, 222, 128, 0.1);
+  background-color: rgba(74, 222, 128, 0.2);
   color: var(--primary-color);
 }
 
@@ -64,6 +72,8 @@ body {
 .main-content {
   flex: 1;
   padding: 2rem;
+  background-color: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(8px);
 }
 
 h1 {
@@ -83,6 +93,8 @@ h1 {
   padding: 1.5rem;
   border-radius: 8px;
   transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .service-card.active {
@@ -121,6 +133,8 @@ h1 {
   padding: 1.5rem;
   border-radius: 8px;
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .search-box {
@@ -132,10 +146,11 @@ h1 {
 .search-box input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid var(--primary-color);
-  background-color: var(--bg-darker);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background-color: rgba(20, 20, 20, 0.8);
   color: var(--text-light);
   border-radius: 4px;
+  backdrop-filter: blur(4px);
 }
 
 .search-btn,
@@ -172,10 +187,12 @@ h1 {
 }
 
 .course-item {
-  background-color: var(--bg-darker);
+  background-color: rgba(20, 20, 20, 0.8);
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .course-item h4 {
@@ -191,21 +208,70 @@ h1 {
   margin-bottom: 0.5rem;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid var(--primary-color);
-  background-color: var(--bg-darker);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background-color: rgba(20, 20, 20, 0.8);
   color: var(--text-light);
   border-radius: 4px;
+  backdrop-filter: blur(4px);
 }
 
 .profile-info {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 8px;
   margin-top: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .profile-info p {
   margin-bottom: 0.5rem;
+}
+
+/* File Upload Styles */
+.file-upload-section {
+  margin-top: 2rem;
+}
+
+#file-upload {
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background-color: rgba(20, 20, 20, 0.8);
+  color: var(--text-light);
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  backdrop-filter: blur(4px);
+}
+
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background-color: rgba(20, 20, 20, 0.8);
+  color: var(--text-light);
+  border-radius: 4px;
+  resize: vertical;
+  backdrop-filter: blur(4px);
+}
+
+#upload-status {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+#upload-status.success {
+  background-color: var(--success-color);
+  color: var(--text-light);
+}
+
+#upload-status.error {
+  background-color: var(--danger-color);
+  color: var(--text-light);
 }
 
 /* Responsive Design */
@@ -222,5 +288,37 @@ h1 {
   .services-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Hover Effects */
+.search-btn:hover,
+.view-details-btn:hover,
+.submit-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-1px);
+}
+
+.edit-btn:hover {
+  background-color: #00a844;
+  transform: translateY(-1px);
+}
+
+.delete-btn:hover {
+  background-color: #ff1111;
+  transform: translateY(-1px);
+}
+
+/* Focus States */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+}
+
+/* Transitions */
+.page {
+  transition: all 0.3s ease-in-out;
 }
 

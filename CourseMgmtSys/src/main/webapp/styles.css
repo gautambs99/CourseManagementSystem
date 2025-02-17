@@ -1,21 +1,25 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/abstract-wallpaper-preview.jpg-QqjVUFKnz3beOMHbuAovyJdFWYicLj.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .container {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.95);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  backdrop-filter: blur(10px);
 }
 
 .login-form {
