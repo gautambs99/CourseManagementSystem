@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
       case "staff":
         isValidLogin = email === "staff@example.com" && password === "staffpass"
         break
+      case "external-institute":
+        isValidLogin = email === "external@example.com" && password === "externalpass"
+        break
     }
 
     if (isValidLogin) {
