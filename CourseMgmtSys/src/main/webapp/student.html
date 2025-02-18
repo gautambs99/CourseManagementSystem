@@ -34,14 +34,19 @@
                     <p><strong>Email:</strong> <span id="student-email">john.doe@example.com</span></p>
                 </div>
             </div>
-            <div class="page" id="student-course-search" style="display: none;">
+            <div id="student-course-search">
                 <h1>Course Search</h1>
                 <div class="search-box">
-                    <input type="text" placeholder="Search for courses...">
-                    <button class="search-btn">Search</button>
+                    <input type="text" id="course-search-input" placeholder="Search for courses...">
+                    <button class="search-btn" onclick="fetchCourses()">Search</button>
                 </div>
-                <div id="search-results"></div>
+                <button id="view-all-courses-btn" class="view-details-btn">View All Courses</button>
+                <div id="course-list">
+                    <h2>Available Courses</h2>
+                    <ul id="courses"></ul>
+                </div>
             </div>
+
         </div>
     </main>
 </div>

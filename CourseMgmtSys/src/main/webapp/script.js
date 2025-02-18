@@ -1,50 +1,42 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm")
-  const errorMessage = document.getElementById("errorMessage")
+  const loginForm = document.getElementById("loginForm");
+  const errorMessage = document.getElementById("errorMessage");
 
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault()
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    const userType = document.getElementById("userType").value
-    const email = document.getElementById("email").value
-    const password = document.getElementById("password").value
+    const userType = document.getElementById("userType").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    // Simple client-side validation
     if (!userType || !email || !password) {
-      showError("Please fill in all fields.")
-      return
+      showError("Please fill in all fields.");
+      return;
     }
 
-    // Check credentials based on user type
-    let isValidLogin = false
+    try {
+      const response = await fetch("http://localhost:8080/CourseMgmtSys_war_exploded/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userType, email, password }),
+      });
 
-    switch (userType) {
-      case "student":
-        isValidLogin = email === "student@example.com" && password === "studentpass"
-        break
-      case "faculty":
-        isValidLogin = email === "faculty@example.com" && password === "facultypass"
-        break
-      case "staff":
-        isValidLogin = email === "staff@example.com" && password === "staffpass"
-        break
-      case "external-institute":
-        isValidLogin = email === "external@example.com" && password === "externalpass"
-        break
-    }
+      const data = await response.json();
 
-    if (isValidLogin) {
-      sessionStorage.setItem("userType", userType);
-      window.location.href = `${userType}.html`; // Redirect to respective dashboard
+      if (data.success) {
+        sessionStorage.setItem("userType", userType);
+        sessionStorage.setItem("userEmail", email);
+        window.location.href = `${userType}.html`;
+      } else {
+        showError("Invalid credentials. Please try again.");
+      }
+    } catch (error) {
+      showError("Login failed. Please try again later.");
     }
- else {
-      showError("Invalid credentials. Please try again.")
-    }
-  })
+  });
 
   function showError(message) {
-    errorMessage.textContent = message
-    errorMessage.style.display = "block"
+    errorMessage.textContent = message;
+    errorMessage.style.display = "block";
   }
-})
-
+});
