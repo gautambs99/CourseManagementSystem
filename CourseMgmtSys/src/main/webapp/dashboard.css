@@ -325,6 +325,6 @@ select:focus {
 .student-content h1 { color: #4caf50; } /* Green */
 .faculty-content h1 { color: #2196F3; } /* Blue */
 .staff-content h1 { color: #FF9800; } /* Orange */
-.external-institute-content h1 { color: #9C27B0; } /* Purple */
+.external-content h1 { color: #9C27B0; } /* Purple */
 
 
