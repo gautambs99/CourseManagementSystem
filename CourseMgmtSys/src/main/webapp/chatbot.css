@@ -48,6 +48,7 @@
 
 /* Chat Body */
 #chat-body {
+    color: #1a1a1a;
     padding: 10px;
     height: 200px;
     overflow-y: auto;
