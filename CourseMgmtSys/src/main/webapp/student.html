@@ -3,207 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background-color: #1a1a1a;
-            color: white;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #1a1a1a;
-            padding: 2rem 1rem;
-        }
-
-        .sidebar ul {
-            list-style: none;
-        }
-
-        .sidebar li {
-            margin-bottom: 1rem;
-        }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: white;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: rgba(34, 197, 94, 0.1);
-        }
-
-        .sidebar a.active {
-            background-color: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-        }
-
-        .main-content {
-            flex: 1;
-            background-color: #1e2e29;
-            padding: 2rem;
-        }
-
-        h1 {
-            color: #22c55e;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .profile-info {
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .profile-info p {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            background-color: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1rem;
-        }
-
-        .search-box button {
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            background-color: #22c55e;
-            color: white;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        .search-box button:hover {
-            background-color: #1fa04e;
-        }
-
-        .page {
-            display: none;
-        }
-
-        #course-list {
-            margin-top: 2rem;
-        }
-
-        #courses {
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        #courses li {
-            padding: 0.75rem;
-            background-color: rgba(0, 0, 0, 0.3);
-            margin-bottom: 0.5rem;
-            border-radius: 0.25rem;
-        }
-
-        .view-details-btn {
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            background-color: #22c55e;
-            border: none;
-            border-radius: 0.25rem;
-            color: white;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .view-details-btn:hover {
-            background-color: #1fa04e;
-        }
-    </style>
-    <link rel = "stylesheet" href="chatbot.css">
+    <title>Student Panel</title>
+    <link rel="stylesheet" href="student.css">
 </head>
 <body>
+
+<!-- Wrap everything inside a container -->
 <div class="container">
-    <nav class="sidebar">
-        <ul>
-            <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
-            <li><a href="#" data-page="about">About Me</a></li>
-            <li><a href="#" data-page="course-search">Course Search</a></li>
-            <li><a href="#" id="logout">Logout</a></li>
-        </ul>
-    </nav>
 
-    <main class="main-content">
-        <div id="student-dashboard" class="page">
-            <h1>Student Dashboard</h1>
-            <p>Welcome to the Student Dashboard. Use the sidebar to navigate.</p>
+    <header class="header">
+        <div class="header-left">
+            <img src="img.png" alt="Student Photo" class="student-photo">
+            <div class="student-info">
+                <h1>Robert J. Sampson</h1>
+                <p>Professor of Social Sciences</p>
+            </div>
         </div>
-
-        <div id="student-about" class="page">
-            <h1>About Me</h1>
-            <div class="profile-info">
-                <p><strong>Student ID:</strong> 12345</p>
-                <p><strong>Name:</strong> John Doe</p>
-                <p><strong>Major:</strong> Computer Science</p>
-                <p><strong>Academic Year:</strong> 2024</p>
-                <p><strong>Email:</strong> <span id="student-email"></span></p>
+     <!--   <div class="header-right">
+            <img src="img_1.png" alt="University Logo" class="university-logo">
+-->
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <img src="img_2.png" alt="User Icon" class="user-icon" id="profile-icon">
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <a href="#" id="view-profile">View Profile</a>
+                    <a href="#" id="logout">Logout</a>
+                </div>
             </div>
         </div>
 
-        <div id="student-course-search" class="page">
+    </header>
+
+    <!-- Navigation -->
+    <nav class="sidebar navigation">
+        <ul>
+            <li><a href="#" class="tab-link active" data-page="student-dashboard">Home</a></li>
+            <li><a href="#" class="tab-link" data-page="student-about">My Profile</a></li>
+            <li><a href="#" class="tab-link" data-page="student-my-courses">My Courses</a></li>
+            <li><a href="#" class="tab-link" data-page="student-course-search">Course Search</a></li>
+            <li><a href="#" class="tab-link" data-page="student-advising-tab">Advising</a></li>
+
+        </ul>
+    </nav>
+
+    <!-- Main content starts here -->
+    <main class="main-content">
+        <div id="student-dashboard" class="page">
+            <h1>Student Dashboard</h1>
+            <p>Welcome to the Student Dashboard</p>
+        </div>
+
+        <div id="student-about" class="page" style="display: none;">
+            <h1>My Profile</h1>
+            <div class="profile-info">
+                <p><strong>Student ID:</strong> 12345</p>
+                <p><strong>Name:</strong> Robert J. Sampson</p>
+                <p><strong>Department:</strong> Social Sciences</p>
+                <p><strong>Academic Advisor:</strong> Social Sciences</p>
+                <p><strong>Email:</strong> sampson@university.edu</p>
+            </div>
+        </div>
+
+        <div id="student-my-courses" class="page" style="display: none;">
+            <h1>My Courses</h1>
+        </div>
+
+        <div id="student-course-search" class="page" style="display: none;">
             <h1>Course Search</h1>
             <div class="search-box">
                 <input type="text" id="course-search-input" placeholder="Search for courses...">
                 <button onclick="fetchCourses()">Search</button>
             </div>
             <button id="view-all-courses-btn" class="view-details-btn">View All Courses</button>
-            <div id="course-list">
-                <h2>Available Courses</h2>
-                <ul id="courses"></ul>
-            </div>
+            <ul id="courses"></ul>ok
+        </div>
+
+        <div id="student-advising-tab" class="page" style="display: none;">
+            <h1>Advising</h1>
         </div>
     </main>
-</div>
-<div id="chat-icon">💬</div>
 
-<div id="chat-window" class="hidden">
-    <div id="chat-header">
-        <span>Chatbot</span>
-        <span id="close-chat">✖</span>
+    <!-- Chatbot icon and window -->
+    <!-- CHANGES START HERE -->
+    <div id="chat-icon">💬</div> <!-- Moved this out of the footer, now positioned using CSS -->
+
+    <!-- Chatbot Window, now positioned at the bottom-right of the page -->
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>Chatbot</span>
+            <span id="close-chat">✖</span>
+        </div>
+        <div id="chat-body"></div>
+        <div id="chat-footer">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
     </div>
-    <div id="chat-body"></div>
-    <div id="chat-footer">
-        <input type="text" id="chat-input" placeholder="Type a message...">
-        <button id="send-btn">Send</button>
-    </div>
+    <!-- CHANGES END HERE -->
+
+    <!-- Footer starts here -->
+    <!-- CHANGES START HERE -->
+    <footer>
+        <p>© 2025 Course Management Portal</p>
+    </footer>
+    <!-- Footer is no longer inside a fixed position, it will be placed at the bottom naturally -->
+    <!-- CHANGES END HERE -->
+
 </div>
+
 <script src="dashboard.js"></script>
 <script src="chatbot.js"></script>
+
 </body>
 </html>

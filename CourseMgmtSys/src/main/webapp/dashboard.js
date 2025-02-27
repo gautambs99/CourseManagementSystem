@@ -1,47 +1,86 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const userType = sessionStorage.getItem("userType");
-  const userEmail = sessionStorage.getItem("userEmail");
+document.addEventListener('DOMContentLoaded', function () {
+    showPage('student-dashboard');
+    highlightActiveTab('student-dashboard');
 
-  if (!userType || !userEmail) {
-    window.location.href = "index.html";
-    return;
-  }
-  if (sessionStorage.getItem("userType") === "student") {
-    document.getElementById("view-all-courses-btn").addEventListener("click", fetchCourses);
-  }
+    const userType = sessionStorage.getItem("userType");
+    const userEmail = sessionStorage.getItem("userEmail");
 
-  document.querySelectorAll("#logout").forEach((logoutBtn) => {
-    logoutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      sessionStorage.clear();
-      window.location.href = "index.html";
+    if (!userType || !userEmail) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    if (userType === "student") {
+        document.getElementById("view-all-courses-btn").addEventListener("click", fetchCourses);
+    }
+
+    document.getElementById("logout").addEventListener("click", (e) => {
+        e.preventDefault();
+        sessionStorage.clear();
+        window.location.href = "index.html";
     });
-  });
 
-  document.querySelectorAll(".sidebar a").forEach((link) => {
-    link.addEventListener("click", function (e) {
-      e.preventDefault();
-      const page = this.getAttribute("data-page");
-      document.querySelectorAll(".page").forEach((p) => (p.style.display = "none"));
-      document.getElementById(`${userType}-${page}`).style.display = "block";
+    // Store last visited page
+    const lastPage = sessionStorage.getItem(`${userType}-lastPage`) || "student-dashboard";
+    showPage(lastPage);
+
+    // Fix navigation links to switch pages properly
+    document.querySelectorAll(".tab-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const pageId = this.getAttribute("data-page");
+            showPage(pageId);
+            highlightActiveTab(pageId);
+            // Store the last visited page
+            sessionStorage.setItem(`${userType}-lastPage`, pageId);
+        });
     });
-  });
-
-  const lastPage = sessionStorage.getItem(`${userType}-lastPage`) || "dashboard";
-  document.getElementById(`${userType}-${lastPage}`).style.display = "block";
 });
 
-function fetchCourses() {
-  fetch("CourseServlet")
-      .then(response => response.json())
-      .then(data => {
-        const courseList = document.getElementById("courses");
-        courseList.innerHTML = ""; // Clear previous results
-        data.forEach(course => {
-          let li = document.createElement("li");
-          li.textContent = `${course.id} - ${course.name}`;
-          courseList.appendChild(li);
-        });
-      })
-      .catch(error => console.error("Error fetching courses:", error));
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.style.display = 'none';
+    });
+
+    const selectedPage = document.getElementById(pageId);
+    if (selectedPage) {
+        selectedPage.style.display = 'block';
+    }
 }
+
+function fetchCourses() {
+    fetch("CourseServlet")
+        .then(response => response.json())
+        .then(data => {
+            const courseList = document.getElementById("courses");
+            courseList.innerHTML = ""; // Clear previous results
+            data.forEach(course => {
+                let li = document.createElement("li");
+                li.textContent = `${course.id} - ${course.name}`;
+                courseList.appendChild(li);
+            });
+        })
+        .catch(error => console.error("Error fetching courses:", error));
+}
+function highlightActiveTab(pageId) {
+    document.querySelectorAll(".tab-link").forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("data-page") === pageId) {
+            link.classList.add("active");
+        }
+    });
+}
+
+    document.getElementById("profile-icon").addEventListener("click", function(event) {
+    event.stopPropagation();
+    document.getElementById("dropdown-menu").classList.toggle("show");
+});
+
+    document.addEventListener("click", function(event) {
+    var menu = document.getElementById("dropdown-menu");
+    var icon = document.getElementById("profile-icon");
+    if (!menu.contains(event.target) && !icon.contains(event.target)) {
+    menu.classList.remove("show");
+}
+});
+

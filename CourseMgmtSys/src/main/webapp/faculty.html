@@ -3,27 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faculty Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <title>Student Panel</title>
+    <link rel="stylesheet" href="student.css">
 </head>
 <body>
+<!-- Wrap everything inside a container -->
 <div class="container">
-    <!-- Faculty Sidebar -->
-    <nav class="sidebar faculty-sidebar">
+
+    <header class="header">
+        <div class="header-left">
+            <img src="img.png" alt="Faculty Photo" class="Faculty-photo">
+            <div class="Faculty-info">
+                <h1>Robert J. Sampson</h1>
+                <p>Professor of Social Sciences</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <img src="img_1.png" alt="University Logo" class="university-logo">
+        </div>
+    </header>
+    <!-- Navigation -->
+    <nav class="sidebar navigation">
         <ul>
-            <li><a href="#" class="active" data-page="dashboard">🏠 Dashboard</a></li>
-            <li><a href="#" data-page="my-courses">📚 My Courses</a></li>
-            <li><a href="#" data-page="course-search">🔍 Course Search</a></li>
-            <li><a href="#" id="logout">🚪 Logout</a></li>
+            <li><a href="#" class="tab-link active" data-page="faculty-dashboard">Home</a></li>
+            <li><a href="#" class="tab-link" data-page="faculty-about">My Profile</a></li>
+            <li><a href="#" class="tab-link" data-page="faculty-my-courses">My Courses</a></li>
+            <li><a href="#" class="tab-link" data-page="faculty-course-search">Course Search</a></li>
+            <li><a href="#" class="tab-link" data-page="faculty-advising-tab">Advising</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
         </ul>
     </nav>
-
+    <!-- Main content starts here -->
     <main class="main-content">
-        <div class="dashboard-content faculty-content">
-            <div class="page" id="faculty-dashboard">
-                <h1>Faculty Dashboard</h1>
-                <p>Welcome to the Faculty Dashboard. Use the sidebar to navigate.</p>
+        <div id="faculty-dashboard" class="page">
+            <h1>faculty Dashboard</h1>
+            <p>Welcome to the Student Dashboard</p>
+        </div>
+
+        <div id="faculty-about" class="page" style="display: none;">
+            <h1>My Profile</h1>
+            <div class="profile-info">
+                <p><strong>faculty ID:</strong> 12345</p>
+                <p><strong>Name:</strong> Robert J. Sampson</p>
+                <p><strong>Department:</strong> Social Sciences</p>
+                <p><strong>Academic Advisor:</strong> Social Sciences</p>
+                <p><strong>Email:</strong> sampson@university.edu</p>
             </div>
+        </div>
+
+
             <div class="page" id="faculty-my-courses" style="display: none;">
                 <h1>My Courses</h1>
                 <div class="course-list">
@@ -47,7 +75,7 @@
                 </div>
                 <div id="faculty-search-results"></div>
             </div>
-        </div>
+
     </main>
 </div>
 <script src="dashboard.js"></script>
