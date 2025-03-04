@@ -1,29 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
-    showPage('student-dashboard');
-    highlightActiveTab('student-dashboard');
+
 
     const userType = sessionStorage.getItem("userType");
     const userEmail = sessionStorage.getItem("userEmail");
-
     if (!userType || !userEmail) {
         window.location.href = "index.html";
         return;
     }
 
+    fetchUserDetails(userEmail);
     if (userType === "student") {
         document.getElementById("view-all-courses-btn").addEventListener("click", fetchCourses);
     }
+
 
     document.getElementById("logout").addEventListener("click", (e) => {
         e.preventDefault();
         sessionStorage.clear();
         window.location.href = "index.html";
     });
-
+    const defaultPage = userType === "faculty" ? "faculty-dashboard" : "student-dashboard";
     // Store last visited page
-    const lastPage = sessionStorage.getItem(`${userType}-lastPage`) || "student-dashboard";
+    const lastPage = sessionStorage.getItem(`${userType}-lastPage`) || defaultPage;
     showPage(lastPage);
-
     // Fix navigation links to switch pages properly
     document.querySelectorAll(".tab-link").forEach(link => {
         link.addEventListener("click", function (e) {
@@ -36,6 +35,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+function fetchUserDetails(email) {
+    fetch("http://localhost:8080/CourseMgmtSys_war_exploded/UserServlet", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ email: email }),
+    })
+        .then(response => response.json())
+        .then(userData => {
+            if (userData.success) {
+                let name = userData.name || "User";
+                let userID = userData.userID || "N/A"; // Can be Student ID or Faculty ID
+                let department = userData.department || "N/A";
+
+                sessionStorage.setItem("userName", name);
+                sessionStorage.setItem("userID", userID);
+                sessionStorage.setItem("userDepartment", department);
+                updateUserDetails(name, userData.email,userID, department);
+            } else {
+                console.error("Error fetching user details:", userData.message);
+            }
+        })
+        .catch(error => console.error("Error fetching user details:", error));
+}
+
+// Function to update the UI dynamically
+function updateUserDetails(name, email,userID, department) {
+    document.getElementById("user-name").textContent = name || "User";
+    document.getElementById("profile-name").textContent = name || "User";
+    document.getElementById("profile-email").textContent = email || "N/A";
+    document.getElementById("profile-id").textContent = userID || "N/A"; // Update User ID
+    document.getElementById("profile-department").textContent = department || "N/A";
+}
 
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
@@ -71,17 +102,17 @@ function highlightActiveTab(pageId) {
     });
 }
 
-    document.getElementById("profile-icon").addEventListener("click", function(event) {
+document.getElementById("profile-icon").addEventListener("click", function(event) {
     event.stopPropagation();
     document.getElementById("dropdown-menu").classList.toggle("show");
 });
 
-    document.addEventListener("click", function(event) {
+document.addEventListener("click", function(event) {
     var menu = document.getElementById("dropdown-menu");
     var icon = document.getElementById("profile-icon");
     if (!menu.contains(event.target) && !icon.contains(event.target)) {
-    menu.classList.remove("show");
-}
+        menu.classList.remove("show");
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -14,7 +14,8 @@
         <div class="header-left">
             <img src="img.png" alt="Faculty Photo" class="faculty-photo">
             <div class="faculty-info">
-                <h1>Robert J. Sampson</h1>
+                <h1 id="user-name">Loading...</h1>
+               <!-- <h1>Robert J. Sampson</h1>-->
                 <p>Professor of Social Sciences</p>
             </div>
         </div>
@@ -24,9 +25,9 @@
         Profile Dropdown Menu -->
         <div class="profile-dropdown">
             <img src="img_2.png" alt="User Icon" class="user-icon" id="profile-icon">
-            <div class="dropdown-menu" id="dropdown-menu"
-                <a href="#" class="tab-link" data-page="faculty-about">My Profile</a>
-                <a href="#" id="logout">Logout</a>
+            <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#" class="tab-link" data-page="faculty-about">View Profile</a>
+            <a href="#" id="logout">Logout</a>
             </div>
         </div>
 
@@ -113,10 +114,10 @@
             <div id="faculty-about" class="page" style="display: none;">
                 <h1>My Profile</h1>
                 <div class="profile-info">
-                    <p><strong>Faculty ID:</strong> 12345</p>
-                    <p><strong>Name:</strong> Robert J. Sampson</p>
-                    <p><strong>Department:</strong> Social Sciences</p>
-                    <p><strong>Email:</strong> sampson@university.edu</p>
+                    <p><strong>Name:</strong> <span id="profile-name">Loading...</span></p>
+                    <p><strong>Department:</strong> <span id="profile-department">Loading...</span></p>
+                    <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
+                    <p><strong>Faculty ID:</strong> <span id="profile-id">Loading...</span></p>
                 </div>
             </div>
             <!-- Advising Page -->
