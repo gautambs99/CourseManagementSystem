@@ -7,112 +7,164 @@
     <link rel="stylesheet" href="student.css">
 </head>
 <body>
-
 <!-- Wrap everything inside a container -->
 <div class="container">
-
     <header class="header">
         <div class="header-left">
             <img src="img.png" alt="Student Photo" class="student-photo">
             <div class="student-info">
                 <h1>Robert J. Sampson</h1>
-                <p>Professor of Social Sciences</p>
             </div>
         </div>
-     <!--   <div class="header-right">
-            <img src="img_1.png" alt="University Logo" class="university-logo">
--->
-            <!-- Profile Dropdown -->
-            <div class="profile-dropdown">
-                <img src="img_2.png" alt="User Icon" class="user-icon" id="profile-icon">
-                <div class="dropdown-menu" id="dropdown-menu">
-                    <a href="#" id="view-profile">View Profile</a>
-                    <a href="#" id="logout">Logout</a>
+         <!--<div class="header-right">
+              <img src="img_1.png" alt="University Logo" class="university-logo">-->
+
+        <!-- Profile Dropdown -->
+        <div class="profile-dropdown">
+            <img src="img_2.png" alt="User Icon" class="user-icon" id="profile-icon">
+            <div class="dropdown-menu" id="dropdown-menu">
+                <a href="#" class="tab-link" data-page="student-about">View Profile</a>
+                <a href="#" id="logout">Logout</a>
+            </div>
+        </div>
+</header>
+<!-- Navigation -->
+<nav class="sidebar navigation">
+    <ul>
+        <li><a href="#" class="tab-link active" data-page="student-dashboard">Home</a></li>
+        <li><a href="#" class="tab-link" data-page="student-about">My Profile</a></li>
+        <li><a href="#" class="tab-link" data-page="student-my-courses">My Courses</a></li>
+        <li><a href="#" class="tab-link" data-page="student-course-search">Course Search</a></li>
+        <li><a href="#" class="tab-link" data-page="student-advising-tab">Advising</a></li>
+
+    </ul>
+</nav>
+
+<!-- Main content starts here -->
+<main class="main-content">
+    <div id="student-dashboard" class="page">
+        <div class="welcome-section">
+            <h1>👋 Welcome to the Student Dashboard!</h1>
+            <p>Stay updated with the latest announcements and manage your courses efficiently.</p>
+        </div>
+        <div id="bulletin-board" class="bulletin">
+            <h2>📌 Bulletin Board</h2>
+            <div class="bulletin-container">
+                <div class="bulletin-item urgent">
+                    <span class="bulletin-icon">🚨</span>
+                    <p><strong>Exam Deadline:</strong> Final exams schedule released. <a href="#">Check Here</a></p>
+                </div>
+                <div class="bulletin-item info">
+                    <span class="bulletin-icon">📅</span>
+                    <p><strong>New Semester:</strong> Starts on <strong>March 10th</strong>.</p>
+                </div>
+                <div class="bulletin-item warning">
+                    <span class="bulletin-icon">📝</span>
+                    <p><strong>Registration:</strong> Closes on <strong>March 5th</strong>.</p>
+                </div>
+                <div class="bulletin-item success">
+                    <span class="bulletin-icon">🎓</span>
+                    <p><strong>Faculty Meeting:</strong> March 7th at 10 AM.</p>
+                </div>
+                <div class="bulletin-item highlight">
+                    <span class="bulletin-icon">💡</span>
+                    <p><strong>Workshop:</strong> "AI in Education" - <a href="#">Register Now!</a></p>
                 </div>
             </div>
         </div>
 
-    </header>
-
-    <!-- Navigation -->
-    <nav class="sidebar navigation">
-        <ul>
-            <li><a href="#" class="tab-link active" data-page="student-dashboard">Home</a></li>
-            <li><a href="#" class="tab-link" data-page="student-about">My Profile</a></li>
-            <li><a href="#" class="tab-link" data-page="student-my-courses">My Courses</a></li>
-            <li><a href="#" class="tab-link" data-page="student-course-search">Course Search</a></li>
-            <li><a href="#" class="tab-link" data-page="student-advising-tab">Advising</a></li>
-
-        </ul>
-    </nav>
-
-    <!-- Main content starts here -->
-    <main class="main-content">
-        <div id="student-dashboard" class="page">
-            <h1>Student Dashboard</h1>
-            <p>Welcome to the Student Dashboard</p>
-        </div>
-
-        <div id="student-about" class="page" style="display: none;">
-            <h1>My Profile</h1>
-            <div class="profile-info">
-                <p><strong>Student ID:</strong> 12345</p>
-                <p><strong>Name:</strong> Robert J. Sampson</p>
-                <p><strong>Department:</strong> Social Sciences</p>
-                <p><strong>Academic Advisor:</strong> Social Sciences</p>
-                <p><strong>Email:</strong> sampson@university.edu</p>
-            </div>
-        </div>
-
-        <div id="student-my-courses" class="page" style="display: none;">
-            <h1>My Courses</h1>
-        </div>
-
-        <div id="student-course-search" class="page" style="display: none;">
-            <h1>Course Search</h1>
-            <div class="search-box">
-                <input type="text" id="course-search-input" placeholder="Search for courses...">
-                <button onclick="fetchCourses()">Search</button>
-            </div>
-            <button id="view-all-courses-btn" class="view-details-btn">View All Courses</button>
-            <ul id="courses"></ul>ok
-        </div>
-
-        <div id="student-advising-tab" class="page" style="display: none;">
-            <h1>Advising</h1>
-        </div>
-    </main>
-
-    <!-- Chatbot icon and window -->
-    <!-- CHANGES START HERE -->
-    <div id="chat-icon">💬</div> <!-- Moved this out of the footer, now positioned using CSS -->
-
-    <!-- Chatbot Window, now positioned at the bottom-right of the page -->
-    <div id="chat-window">
-        <div id="chat-header">
-            <span>Chatbot</span>
-            <span id="close-chat">✖</span>
-        </div>
-        <div id="chat-body"></div>
-        <div id="chat-footer">
-            <input type="text" id="chat-input" placeholder="Type a message...">
-            <button id="send-btn">Send</button>
+    </div>
+    <div id="student-about" class="page" style="display: none;">
+        <h1>My Profile</h1>
+        <div class="profile-info">
+            <p><strong>Student ID:</strong> 12345</p>
+            <p><strong>Name:</strong> Robert J. Sampson</p>
+            <p><strong>Department:</strong> Social Sciences</p>
+            <p><strong>Academic Advisor:</strong> Social Sciences</p>
+            <p><strong>Email:</strong> sampson@university.edu</p>
         </div>
     </div>
-    <!-- CHANGES END HERE -->
 
-    <!-- Footer starts here -->
-    <!-- CHANGES START HERE -->
-    <footer>
-        <p>© 2025 Course Management Portal</p>
-    </footer>
-    <!-- Footer is no longer inside a fixed position, it will be placed at the bottom naturally -->
-    <!-- CHANGES END HERE -->
+    <div id="student-my-courses" class="page" style="display: none;">
+        <h1>My Courses</h1>
+    </div>
 
+    <div id="student-course-search" class="page" style="display: none;">
+        <h1>Course Search</h1>
+        <div class="search-box">
+            <input type="text" id="course-search-input" placeholder="Search for courses...">
+            <button onclick="fetchCourses()">Search</button>
+        </div>
+        <button id="view-all-courses-btn" class="view-details-btn">View All Courses</button>
+        <ul id="courses"></ul>
+    </div>
+
+    <div id="student-advising-tab" class="page" style="display: none;">
+        <h1>📚 Advising</h1>
+        <!-- Advisor Information -->
+        <div class="advisor-card">
+            <div class="advisor-info">
+                <h2>Dr. Emma White</h2>
+                <p><strong>Department:</strong> Computer Science</p>
+                <p><strong>Email:</strong> emma.white@university.edu</p>
+                <p><strong>Office Hours:</strong> Monday - Friday, 10 AM - 4 PM</p>
+            </div>
+        </div>
+
+            <!-- Appointment Booking (No Redirection) -->
+        <div class="appointment-section">
+            <h2>📅 Schedule an Appointment</h2>
+            <input type="date" id="appointment-date">
+            <button class="book-appointment">Book Now</button>
+            <p class="appointment-message"></p>
+        </div>
+
+            <!-- Upcoming Meetings (Static, No Redirection) -->
+        <div class="upcoming-meetings">
+            <h2>🔔 Upcoming Appointments</h2>
+            <ul id="meetings-list">
+                <li>📆 March 5th - Advising Session with Dr. White at 2:00 PM</li>
+                <li>📆 March 10th - Career Counseling Session at 3:30 PM</li>
+            </ul>
+        </div>
+
+            <!-- Advising FAQs (Static Info, No Links) -->
+        <div class="faqs">
+            <h2>❓ Advising FAQs</h2>
+            <ul>
+                <li><strong>How do I drop a course?</strong> Check with your advisor during office hours.</li>
+                <li><strong>What if I miss an appointment?</strong> Contact your advisor to reschedule.</li>
+                <li><strong>How do I check my degree progress?</strong> Refer to your course dashboard.</li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<!-- Chatbot icon and window -->
+<!-- CHANGES START HERE -->
+<div id="chat-icon">💬</div> <!-- Moved this out of the footer, now positioned using CSS -->
+
+<!-- Chatbot Window, now positioned at the bottom-right of the page -->
+<div id="chat-window">
+    <div id="chat-header">
+        <span>Chatbot</span>
+        <span id="close-chat">✖</span>
+    </div>
+    <div id="chat-body"></div>
+    <div id="chat-footer">
+        <input type="text" id="chat-input" placeholder="Type a message...">
+        <button id="send-btn">Send</button>
+    </div>
 </div>
+<!-- CHANGES END HERE -->
 
+<!-- Footer starts here -->
+<footer>
+    <p>© 2025 Course Management Portal</p>
+</footer>
+<!-- Footer is no longer inside a fixed position, it will be placed at the bottom naturally -->
+</div>
 <script src="dashboard.js"></script>
 <script src="chatbot.js"></script>
-
 </body>
 </html>

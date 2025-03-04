@@ -16,7 +16,7 @@ import org.json.JSONObject;
 public class AuthServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/dbcollege?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String DB_USER = "root"; // Change if needed
-    private static final String DB_PASSWORD = "root123"; // Change if needed
+    private static final String DB_PASSWORD = "Siri@1234"; // Change if needed
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

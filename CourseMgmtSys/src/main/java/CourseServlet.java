@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CourseServlet extends HttpServlet {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/dbcollege";
     private static final String JDBC_USER = "root";  // Change this to your MySQL username
-    private static final String JDBC_PASS = "root123";  // Change this to your MySQL password
+    private static final String JDBC_PASS = "Siri@1234";  // Change this to your MySQL password
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");

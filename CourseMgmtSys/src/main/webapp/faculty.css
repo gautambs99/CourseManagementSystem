@@ -1,83 +1,60 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Change the Outer Background Color */
 body {
     font-family: Arial, sans-serif;
-    background-color: #800000;
+    background-color: #e0e0e0; /* Light gray background */
     color: #333;
 }
 
-a {
-    text-decoration: none;
-    color: #333;
+/* Main container */
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-/* Header Styling */
+/* Top Header */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #800000;
+    background-color: #333;
     padding: 15px 20px;
-
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.student-photo {
-    width: 60px;
-    height: 60px;
+.faculty-photo {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
 }
 
-.student-info h1 {
-    font-size: 18px;
-    color: #800000; /* Red color */
-}
-
-.student-info p {
-    font-size: 14px;
-    color: #ccc;
+.faculty-info h1 {
+    font-size: 1.8rem;
+    color: red;
 }
 
 .university-logo {
-    width: 70px; /* Adjust size */
+    width: 70px;
     height: auto;
 }
 
-/* Navigation Styling */
+/* Top Navigation */
 .navigation {
     background-color: #800000;
     padding: 10px 0;
     text-align: center;
 }
-.navigation li {
-    margin: 0 15px;
-}
+
 .navigation ul {
     display: flex;
     list-style: none;
     justify-content: center;
-}
-.navigation a {
-    text-decoration: none;
-    color: white;
-    font-size: 14px;
-    padding: 10px;
-    display: block;
-}
-
-.navigation a:hover {
-    text-decoration: underline;
 }
 
 .navigation ul li {
@@ -95,44 +72,190 @@ a {
     color: yellow;
 }
 
-/* Main Content Styling */
-main {
-    flex: 1;
+/* Main Layout (Fixing Alignment) */
+.layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 30px auto; /* Adds spacing around content */
     padding: 20px;
+    background-color: #f5f5f5; /* Light inner background */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.profile-info, .course-info, .advising-info {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+/* Left Sidebar */
+.sidebar {
+    background-color: #900; /* Highlighted red */
+    color: white;
+    padding: 20px;
+    width: 250px;
+    height: auto;
+    flex-shrink: 0;
+    border-radius: 10px;
 }
 
-h1 {
-    color: #900;
-    font-size: 1.8rem;
+.sidebar h2 {
+    font-size: 1.5rem;
     margin-bottom: 15px;
+    text-align: center;
 }
 
-.profile-info p {
-    font-size: 1.2rem;
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    font-size: 1.1rem;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #b30000;
+}
+
+/* Main Content */
+.main-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex-grow: 1;
+    margin: 0 20px;
+    min-width: 600px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Right Sidebar */
+.right-sidebar {
+    background-color: #900; /* Highlighted red */
+    color: white;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.right-sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.right-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.right-sidebar ul li {
+    margin: 10px 0;
+}
+
+.right-sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.right-sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Book Highlight */
+.book-highlight {
+    margin-top: 20px;
+    text-align: center;
+    background-color: #b30000; /* Slightly darker red */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.book-highlight img {
+    width: 100px;
+    border-radius: 5px;
+}
+
+.book-highlight p {
+    font-size: 1rem;
+    color: #fff;
+}
+/* Advising Section Styling */
+.advising-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.advising-section h2 {
+    font-size: 1.5rem;
+    color: #900;
     margin-bottom: 10px;
 }
 
-.course-info {
-    /* Customize course section styles */
-}
-html, body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+/* Student Search Styling */
+#student-search {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
-/* The container takes up all available space, except the footer */
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+#student-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#student-list li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Scheduled Appointments Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #900;
+    color: white;
+}
+
+/* Faculty Availability */
+#faculty-availability {
+    list-style: none;
+    padding: 0;
+}
+
+#faculty-availability li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 /* Footer Styling */
 footer {
@@ -143,136 +266,74 @@ footer {
     margin-top: auto; /* Push footer to the bottom */
     width: 100%;
 }
-/* For search box on Course Search page */
-.search-box {
+/* Faculty Home Page Sections */
+.faculty-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
     margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.search-box input {
-    width: 60%;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+.faculty-section h2 {
+    font-size: 1.5rem;
+    color: #900;
+    margin-bottom: 10px;
 }
 
-.search-box button {
-    padding: 10px 15px;
-    background-color: #900;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.search-box button:hover {
-    background-color: #700;
-}
-
-#courses {
-    list-style: none;
+/* Course List */
+.faculty-section ul {
+    list-style-type: none;
     padding: 0;
 }
 
-#courses li {
-    margin: 10px 0;
-    font-size: 1.1rem;
-    color: #333;
-    padding: 10px;
+.faculty-section ul li {
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-/* Advising Page Styling */
-.advising-info {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.advising-info p {
-    font-size: 1.2rem;
-}
-/* Chat Icon Style */
-#chat-icon {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    cursor: pointer;
-}
-
-/* Chat Window Style */
-#chat-window {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 300px;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    display: none;
-}
-
-#chat-header {
-    background-color: #900;
-    color: white;
     padding: 10px;
-    border-radius: 10px 10px 0 0;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Table Styling for Appointments */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
     text-align: center;
 }
 
-#chat-body {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    background-color: #f1f1f1;
-}
-
-#chat-footer {
-    padding: 10px;
-    display: flex;
-}
-
-#chat-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-#send-btn {
+table th {
     background-color: #900;
     color: white;
-    border: none;
-    padding: 10px;
-    margin-left: 10px;
-    border-radius: 5px;
+}
+
+/* Links */
+.faculty-section a {
+    color: #900;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.faculty-section a:hover {
+    text-decoration: underline;
+}
+/* Profile Dropdown Styling */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
     cursor: pointer;
 }
 
-/* Hidden class to toggle visibility */
-.hidden {
-    display: none;
-}
-/* Style for user icon */
 .user-icon {
     width: 40px;
     height: 40px;
-    cursor: pointer;
     border-radius: 50%;
-}
-
-/* Dropdown Menu */
-.profile-dropdown {
-    position: relative;
-
+    cursor: pointer;
 }
 
 .dropdown-menu {
@@ -284,6 +345,7 @@ footer {
     width: 150px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
+    z-index: 1000;
 }
 
 .dropdown-menu a {
@@ -292,12 +354,13 @@ footer {
     text-decoration: none;
     color: black;
     font-size: 14px;
-
 }
 
 .dropdown-menu a:hover {
     background-color: #f1f1f1;
 }
+
+/* Show dropdown when active */
 .dropdown-menu.show {
     display: block;
 }
