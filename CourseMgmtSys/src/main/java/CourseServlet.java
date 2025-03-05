@@ -64,7 +64,6 @@ public class CourseServlet extends HttpServlet {
                 StringBuilder json = new StringBuilder("{");
                 json.append("\"id\":").append(courseRs.getInt("course_id")).append(",");
                 json.append("\"name\":\"").append(courseRs.getString("course_name")).append("\",");
-                json.append("\"description\":\"").append(courseRs.getString("description") == null ? "No description available" : courseRs.getString("description")).append("\",");
                 json.append("\"faculty_id\":").append(courseRs.getInt("faculty_id")).append(",");
                 json.append("\"department_id\":").append(courseRs.getInt("department_id")).append(",");
                 json.append("\"prerequisites\":").append(fetchPrerequisites(conn, Integer.parseInt(courseId)));
@@ -88,7 +87,7 @@ public class CourseServlet extends HttpServlet {
 
         while (rs.next()) {
             if (!first) json.append(",");
-            json.append("{\"id\":").append(rs.getInt("prerequisite_course_id"))
+            json.append("{\"id\":").append(rs.getInt("prerequisite_id"))
                     .append(",\"name\":\"").append(rs.getString("course_name")).append("\"}");
             first = false;
         }
