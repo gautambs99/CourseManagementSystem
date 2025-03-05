@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script> <!-- D3.js for visualization -->
+    <link rel="stylesheet" href="student.css"> <!-- Include styling -->
+</head>
+<body>
+
+<header>
+    <h1 id="course-title">Course Details</h1>
+</header>
+
+<div class="container">
+    <p><strong>Course ID:</strong> <span id="course-id"></span></p>
+    <p><strong>Course Name:</strong> <span id="course-name"></span></p>
+    <p><strong>Description:</strong> <span id="course-description"></span></p>
+    <p><strong>Faculty ID:</strong> <span id="faculty-id"></span></p>
+    <p><strong>Department ID:</strong> <span id="department-id"></span></p>
+
+    <h2>Prerequisites</h2>
+    <ul id="prereq-list"></ul>
+
+    <h2>Prerequisite Visualization</h2>
+    <div id="graph-container"></div>
+
+    <a href="student.html">⬅ Back to Dashboard</a>
+</div>
+
+<script src="course-details.js"></script> <!-- JavaScript file -->
+</body>
+</html>
