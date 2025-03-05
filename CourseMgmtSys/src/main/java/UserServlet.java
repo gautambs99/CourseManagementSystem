@@ -9,35 +9,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static Cons.Constants.*;
 
-@WebServlet("/UserServlet")
+@WebServlet(USER_SERVLET)
 public class UserServlet extends HttpServlet {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/dbcollege";
-    private static final String JDBC_USER = "root"; // Change to your database user
-    private static final String JDBC_PASS = "Siri@1234"; // Change to your database password
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String email = request.getParameter("email");
+        String email = request.getParameter(EMAIL);
 
         if (email == null || email.isEmpty()) {
-            response.getWriter().write("{\"success\": false, \"message\": \"Invalid email\"}");
+            response.getWriter().write(INVALID_EMAIL);
             return;
         }
 
-        // SQL Query to get user details
-        String query = "SELECT u.name, u.email, u.user_id, " +
-                "(SELECT student_id FROM students WHERE user_id = u.user_id LIMIT 1) AS student_id, " +
-                "(SELECT faculty_id FROM faculty WHERE user_id = u.user_id LIMIT 1) AS faculty_id, " +
-                "(SELECT department_name FROM students WHERE user_id = u.user_id LIMIT 1) AS student_department, " +
-                "(SELECT department_name FROM faculty WHERE user_id = u.user_id LIMIT 1) AS faculty_department " +
-                "FROM users u WHERE u.email = ?";
-
         try (PrintWriter out = response.getWriter();
-             Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(USER_DETAILS_QUERY)) {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             stmt.setString(1, email);
@@ -51,20 +41,18 @@ public class UserServlet extends HttpServlet {
                     String studentDepartment = rs.getString("student_department");
                     String facultyDepartment = rs.getString("faculty_department");
                     String userID = (studentID != null) ? studentID : (facultyID != null) ? facultyID : "N/A";
-                    // Determine which department to show
                     String department = (studentDepartment != null) ? studentDepartment : facultyDepartment;
 
-                    // JSON Response
                     out.print("{\"success\": true, \"name\": \"" + userName + "\", " +
-                            "\"email\": \"" + userEmail + "\", " + "\"userID\": \"" + userID + "\", " +
+                            "\"email\": \"" + userEmail + "\", \"userID\": \"" + userID + "\", " +
                             "\"department\": \"" + (department != null ? department : "N/A") + "\"}");
                 } else {
-                    out.print("{\"success\": false, \"message\": \"User not found\"}");
+                    out.print(USER_NOT_FOUND);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("{\"success\": false, \"message\": \"Server error\"}");
+            response.getWriter().write(SERVER_ERROR);
         }
     }
 }

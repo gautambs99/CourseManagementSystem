@@ -1,21 +1,15 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static Cons.Constants.*;
 
-@WebServlet("/CourseServlet")
+@WebServlet(COURSE_SERVLET)
 public class CourseServlet extends HttpServlet {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/dbcollege";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASS = "Siri@1234";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -26,19 +20,16 @@ public class CourseServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 
-            // **Handle Search Query**
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                String query = "SELECT course_id, course_name FROM courses WHERE course_id = ? OR course_name LIKE ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-
+                PreparedStatement stmt = conn.prepareStatement(COURSE_SEARCH_QUERY);
                 try {
-                    stmt.setInt(1, Integer.parseInt(searchQuery));  // Search by ID
+                    stmt.setInt(1, Integer.parseInt(searchQuery));
                 } catch (NumberFormatException e) {
-                    stmt.setInt(1, -1);  // Fallback
+                    stmt.setInt(1, -1);
                 }
-                stmt.setString(2, "%" + searchQuery + "%");  // Partial name match
+                stmt.setString(2, "%" + searchQuery + "%");
 
                 ResultSet rs = stmt.executeQuery();
                 StringBuilder json = new StringBuilder("[");
@@ -51,9 +42,8 @@ public class CourseServlet extends HttpServlet {
                     found = true;
                 }
                 json.append("]");
-
                 if (!found) {
-                    System.out.println("🔴 No courses found for search: " + searchQuery);
+                    System.out.println(NO_COURSES_FOUND + searchQuery);
                 }
 
                 out.print(json.toString());
@@ -61,15 +51,13 @@ public class CourseServlet extends HttpServlet {
                 return;
             }
 
-            // **Handle Course Details Request**
             if (courseId != null && !courseId.trim().isEmpty()) {
-                String courseQuery = "SELECT * FROM courses WHERE course_id = ?";
-                PreparedStatement courseStmt = conn.prepareStatement(courseQuery);
+                PreparedStatement courseStmt = conn.prepareStatement(COURSE_DETAILS_QUERY);
                 courseStmt.setInt(1, Integer.parseInt(courseId));
                 ResultSet courseRs = courseStmt.executeQuery();
 
                 if (!courseRs.next()) {
-                    out.print("{\"error\": \"Course not found\"}");
+                    out.print(COURSE_NOT_FOUND);
                     return;
                 }
 
@@ -79,13 +67,11 @@ public class CourseServlet extends HttpServlet {
                 json.append("\"description\":\"").append(courseRs.getString("description") == null ? "No description available" : courseRs.getString("description")).append("\",");
                 json.append("\"faculty_id\":").append(courseRs.getInt("faculty_id")).append(",");
                 json.append("\"department_id\":").append(courseRs.getInt("department_id")).append(",");
-
                 json.append("\"prerequisites\":").append(fetchPrerequisites(conn, Integer.parseInt(courseId)));
                 json.append("}");
 
                 out.print(json.toString());
                 conn.close();
-                return;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,10 +79,7 @@ public class CourseServlet extends HttpServlet {
     }
 
     private String fetchPrerequisites(Connection conn, int courseId) throws SQLException {
-        String prereqQuery = "SELECT p.prerequisite_course_id, c.course_name FROM prerequisites p " +
-                "JOIN courses c ON p.prerequisite_course_id = c.course_id " +
-                "WHERE p.course_id = ?";
-        PreparedStatement stmt = conn.prepareStatement(prereqQuery);
+        PreparedStatement stmt = conn.prepareStatement(PREREQUISITES_QUERY);
         stmt.setInt(1, courseId);
         ResultSet rs = stmt.executeQuery();
 
@@ -106,9 +89,7 @@ public class CourseServlet extends HttpServlet {
         while (rs.next()) {
             if (!first) json.append(",");
             json.append("{\"id\":").append(rs.getInt("prerequisite_course_id"))
-                    .append(",\"name\":\"").append(rs.getString("course_name")).append("\",")
-                    .append("\"prerequisites\":").append(fetchPrerequisites(conn, rs.getInt("prerequisite_course_id")))
-                    .append("}");
+                    .append(",\"name\":\"").append(rs.getString("course_name")).append("\"}");
             first = false;
         }
 
