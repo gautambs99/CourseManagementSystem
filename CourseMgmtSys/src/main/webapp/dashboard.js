@@ -2,14 +2,15 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("✅ dashboard.js Loaded Successfully!");
-
+    const userType = sessionStorage.getItem("userType");
+    if (userType === "student") {
     const bookButton = document.getElementById("book-appointment");
     if (bookButton) {
         bookButton.addEventListener("click", bookAppointment);
         console.log("📌 bookAppointment() event listener added.");
     } else {
         console.error("❌ book-appointment button not found in DOM.");
-    }
+    }}
 });
 function bookAppointment() {
     console.log("🔄 bookAppointment() function called!");
@@ -121,9 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetchFacultyDetails();
         loadStudentAppointments(); // ✅ Now it's properly defined before being used
-    } else if (userType === "faculty") {
+    } /*else if (userType === "faculty") {
         loadFacultyAppointments();
-    }
+    }*/
 
     document.getElementById("logout").addEventListener("click", (e) => {
         e.preventDefault();
@@ -156,6 +157,7 @@ function fetchUserDetails(email) {
         .then(response => response.json())
         .then(userData => {
             console.log("✅ User Data Received:", userData);
+            const userType = sessionStorage.getItem("userType");
 
             if (userData.success) {
                 sessionStorage.setItem("userID", userData.userID);
@@ -168,9 +170,9 @@ function fetchUserDetails(email) {
                 } else {
                     console.warn("⚠️ No assigned faculty advisor.");
                 }
-
-                document.getElementById("profile-advisor").textContent = userData.advisor || "No Advisor Assigned";
-
+                if (userType === "student") {
+                    document.getElementById("profile-advisor").textContent = userData.advisor || "No Advisor Assigned";
+                }
                 updateUserDetails(
                     userData.name || "User",
                     userData.email || "N/A",
@@ -315,7 +317,9 @@ function getStatusIcon(status) {
 // ✅ Call function when page loads
 document.addEventListener("DOMContentLoaded", function () {
     console.log("🚀 Page Loaded. Fetching Courses...");
-    fetchCourses();
+    const userType = sessionStorage.getItem("userType");
+    if (userType === "student") {
+    fetchCourses();}
 });
 
 // ✅ FIXED: Highlight Active Tab
