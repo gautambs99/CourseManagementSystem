@@ -1,16 +1,18 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static Cons.Constants.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 @WebServlet("/CourseServlet")
 public class CourseServlet extends HttpServlet {
@@ -19,48 +21,110 @@ public class CourseServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String userId = request.getParameter("user_id");
-        System.out.println("📡 Fetching courses for student ID: " + userId);
+        String searchQuery = request.getParameter("search");
+        String courseId = request.getParameter("courseId");
 
-        JSONArray courseList = new JSONArray();
+        try (PrintWriter out = response.getWriter()) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/collegedb", "root", "root123");
-             PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT c.course_id, c.course_name, c.department_id, " +
-                             "CASE " +
-                             "  WHEN FIND_IN_SET(c.course_id, s.completed_courses) > 0 THEN 'Completed' " +
-                             "  WHEN FIND_IN_SET(c.course_id, s.enrolled_courses) > 0 THEN 'Ongoing' " +
-                             "  WHEN FIND_IN_SET(c.course_id, s.to_do_courses) > 0 THEN 'Pending' " +
-                             "  ELSE 'Not Taken' " +
-                             "END AS status " +
-                             "FROM student s " +  // 🔥 CHANGED FROM `students` TO `student`
-                             "JOIN course c ON FIND_IN_SET(c.course_id, CONCAT(s.completed_courses, ',', s.enrolled_courses, ',', s.to_do_courses)) > 0 " +
-                             "WHERE s.user_id = ?")) {
+            // Searching courses by name or ID
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                PreparedStatement stmt = conn.prepareStatement(COURSE_SEARCH_QUERY);
+                stmt.setString(1, searchQuery);
+                stmt.setString(2, "%" + searchQuery + "%");
 
-            stmt.setString(1, userId);
-            ResultSet rs = stmt.executeQuery();
+                ResultSet rs = stmt.executeQuery();
+                StringBuilder json = new StringBuilder("[");
+                boolean found = false;
 
-            while (rs.next()) {
-                JSONObject course = new JSONObject();
-                course.put("course_id", rs.getString("course_id"));
-                course.put("course_name", rs.getString("course_name"));
-                course.put("department_id", rs.getString("department_id"));
-                course.put("status", rs.getString("status"));
+                while (rs.next()) {
+                    if (json.length() > 1) json.append(",");
+                    json.append("{\"id\":\"").append(rs.getString("course_id"))
+                            .append("\",\"name\":\"").append(rs.getString("course_name")).append("\"}");
+                    found = true;
+                }
+                json.append("]");
+                if (!found) {
+                    System.out.println(NO_COURSES_FOUND + searchQuery);
+                }
 
-                courseList.put(course);
+                out.print(json.toString());
+                conn.close();
+                return;
             }
 
-            System.out.println("✅ Courses retrieved successfully: " + courseList.toString());
+            // Fetch course details including prerequisites
+            if (courseId != null && !courseId.trim().isEmpty()) {
+                PreparedStatement courseStmt = conn.prepareStatement(
+                        "SELECT course_id, course_name, faculty_id, department_id, prerequisite_id " +
+                                "FROM course WHERE course_id = ?"
+                );
+                courseStmt.setString(1, courseId);
+                ResultSet courseRs = courseStmt.executeQuery();
+
+                if (!courseRs.next()) {
+                    out.print("{\"error\":\"Course Not Found\"}");
+                    return;
+                }
+
+                StringBuilder json = new StringBuilder("{");
+                json.append("\"id\":\"").append(courseRs.getString("course_id")).append("\",");
+                json.append("\"name\":\"").append(courseRs.getString("course_name")).append("\",");
+                json.append("\"faculty_id\":").append(courseRs.getInt("faculty_id")).append(",");
+                json.append("\"department_id\":").append(courseRs.getInt("department_id")).append(",");
+
+                // ✅ Initialize visited set to track cycles
+                Set<String> visited = new HashSet<>();
+                json.append("\"prerequisites\":").append(fetchPrerequisites(conn, courseId, visited)); // ✅ Fixed method call
+                json.append("}");
+
+                out.print(json.toString());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ Database error: " + e.getMessage());
-            response.getWriter().write("{\"success\": false, \"message\": \"Server error: " + e.getMessage() + "\"}");
+        }
+    }
+
+    private JSONArray fetchPrerequisites(Connection conn, String courseId, Set<String> visited) throws SQLException {
+        JSONArray prereqArray = new JSONArray();
+
+        if (visited.contains(courseId)) {
+            return prereqArray; // Stop infinite loop
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            out.print(courseList.toString());
-            out.flush();
+        visited.add(courseId); // Mark this course as visited
+
+        PreparedStatement stmt = conn.prepareStatement(
+                "SELECT course_id, course_name, prerequisite_id " +
+                        "FROM course WHERE course_id = ?"
+        );
+
+        stmt.setString(1, courseId);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String prerequisiteId = rs.getString("prerequisite_id");
+
+            if (prerequisiteId != null) {
+                PreparedStatement prereqStmt = conn.prepareStatement(
+                        "SELECT course_id, course_name, prerequisite_id " +
+                                "FROM course WHERE course_id = ?"
+                );
+                prereqStmt.setString(1, prerequisiteId);
+                ResultSet prereqRs = prereqStmt.executeQuery();
+
+                while (prereqRs.next()) {
+                    JSONObject prereqObj = new JSONObject();
+                    prereqObj.put("id", prereqRs.getString("course_id"));
+                    prereqObj.put("name", prereqRs.getString("course_name"));
+                    prereqObj.put("prerequisites", fetchPrerequisites(conn, prereqRs.getString("course_id"), visited));
+                    prereqArray.put(prereqObj);
+                }
+            }
         }
+
+        return prereqArray;
     }
 }

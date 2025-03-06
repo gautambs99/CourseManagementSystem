@@ -255,48 +255,8 @@ function showPage(pageId) {
 }
 
 // ✅ FIXED: Load Courses
-function fetchCourses() {
-    const userId = sessionStorage.getItem("userID"); // Get Student ID
-    if (!userId) {
-        console.error("❌ User ID not found in sessionStorage.");
-        return;
-    }
 
-    console.log(`📡 Fetching courses for user: ${userId}`);
 
-    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/CourseServlet?user_id=${userId}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ API Response:", data);
-
-            const courseList = document.getElementById("course-list");
-            if (!courseList) {
-                console.error("❌ course-list element not found in HTML.");
-                return;
-            }
-            courseList.innerHTML = ""; // Clear table
-
-            if (!Array.isArray(data) || data.length === 0) {
-                console.warn("⚠️ No courses found.");
-                courseList.innerHTML = "<tr><td colspan='4'>No courses found.</td></tr>";
-                return;
-            }
-
-            data.forEach(course => {
-                let statusIcon = getStatusIcon(course.status);
-
-                let row = `<tr>
-                    <td>${course.course_id}</td>
-                    <td>${course.course_name}</td>
-                    <td>${course.department_id}</td>
-                    <td class="status-icon">${statusIcon}</td>
-                </tr>`;
-
-                courseList.innerHTML += row;
-            });
-        })
-        .catch(error => console.error("❌ Error fetching courses:", error));
-}
 
 // ✅ Helper function to determine status icons
 function getStatusIcon(status) {
@@ -341,3 +301,65 @@ document.addEventListener("click", function(event) {
         menu.classList.remove("show");
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ dashboard.js Loaded Successfully!");
+
+    const searchButton = document.getElementById("search-button");
+    const searchInput = document.getElementById("course-search-input");
+
+    if (searchButton) {
+        searchButton.addEventListener("click", function () {
+            const query = searchInput.value.trim();
+            console.log(`🔍 Searching for: ${query}`);
+            fetchCourses(query);
+        });
+    } else {
+        console.error("❌ Search button not found.");
+    }
+
+    fetchCourses(); // ✅ Ensures courses are loaded on page load
+});
+
+// ✅ Function to fetch courses based on search input
+function fetchCourses(query = "") {
+    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/CourseServlet?search=${encodeURIComponent(query)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("📡 API Response:", data);
+
+            const courseList = document.getElementById("courses");
+            if (!courseList) {
+                console.error("❌ courses element not found in HTML.");
+                return;
+            }
+
+            courseList.innerHTML = ""; // ✅ Clear old results
+
+            if (!Array.isArray(data) || data.length === 0) {
+                console.warn("⚠️ No courses found.");
+                courseList.innerHTML = "<li>No courses found.</li>";
+                return;
+            }
+
+            // ✅ Display courses as clickable links
+            data.forEach(course => {
+                let li = document.createElement("li");
+                let link = document.createElement("a");
+                link.href = `course-details.html?courseId=${course.id}`;
+                link.textContent = `${course.id} - ${course.name}`;
+                li.appendChild(link);
+                courseList.appendChild(li);
+            });
+
+            console.log("✅ UI Updated with clickable courses.");
+        })
+        .catch(error => {
+            console.error("❌ Error fetching courses:", error);
+            document.getElementById("courses").innerHTML;
+        });
+}
