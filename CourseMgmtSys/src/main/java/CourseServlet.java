@@ -1,98 +1,66 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static Cons.Constants.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-@WebServlet(COURSE_SERVLET)
+@WebServlet("/CourseServlet")
 public class CourseServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String searchQuery = request.getParameter("search");
-        String courseId = request.getParameter("courseId");
+        String userId = request.getParameter("user_id");
+        System.out.println("📡 Fetching courses for student ID: " + userId);
 
-        try (PrintWriter out = response.getWriter()) {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        JSONArray courseList = new JSONArray();
 
-            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                PreparedStatement stmt = conn.prepareStatement(COURSE_SEARCH_QUERY);
-                try {
-                    stmt.setInt(1, Integer.parseInt(searchQuery));
-                } catch (NumberFormatException e) {
-                    stmt.setInt(1, -1);
-                }
-                stmt.setString(2, "%" + searchQuery + "%");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/collegedb", "root", "root123");
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT c.course_id, c.course_name, c.department_id, " +
+                             "CASE " +
+                             "  WHEN FIND_IN_SET(c.course_id, s.completed_courses) > 0 THEN 'Completed' " +
+                             "  WHEN FIND_IN_SET(c.course_id, s.enrolled_courses) > 0 THEN 'Ongoing' " +
+                             "  WHEN FIND_IN_SET(c.course_id, s.to_do_courses) > 0 THEN 'Pending' " +
+                             "  ELSE 'Not Taken' " +
+                             "END AS status " +
+                             "FROM student s " +  // 🔥 CHANGED FROM `students` TO `student`
+                             "JOIN course c ON FIND_IN_SET(c.course_id, CONCAT(s.completed_courses, ',', s.enrolled_courses, ',', s.to_do_courses)) > 0 " +
+                             "WHERE s.user_id = ?")) {
 
-                ResultSet rs = stmt.executeQuery();
-                StringBuilder json = new StringBuilder("[");
-                boolean found = false;
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
 
-                while (rs.next()) {
-                    if (json.length() > 1) json.append(",");
-                    json.append("{\"id\":").append(rs.getInt("course_id"))
-                            .append(",\"name\":\"").append(rs.getString("course_name")).append("\"}");
-                    found = true;
-                }
-                json.append("]");
-                if (!found) {
-                    System.out.println(NO_COURSES_FOUND + searchQuery);
-                }
+            while (rs.next()) {
+                JSONObject course = new JSONObject();
+                course.put("course_id", rs.getString("course_id"));
+                course.put("course_name", rs.getString("course_name"));
+                course.put("department_id", rs.getString("department_id"));
+                course.put("status", rs.getString("status"));
 
-                out.print(json.toString());
-                conn.close();
-                return;
+                courseList.put(course);
             }
 
-            if (courseId != null && !courseId.trim().isEmpty()) {
-                PreparedStatement courseStmt = conn.prepareStatement(COURSE_DETAILS_QUERY);
-                courseStmt.setInt(1, Integer.parseInt(courseId));
-                ResultSet courseRs = courseStmt.executeQuery();
+            System.out.println("✅ Courses retrieved successfully: " + courseList.toString());
 
-                if (!courseRs.next()) {
-                    out.print(COURSE_NOT_FOUND);
-                    return;
-                }
-
-                StringBuilder json = new StringBuilder("{");
-                json.append("\"id\":").append(courseRs.getInt("course_id")).append(",");
-                json.append("\"name\":\"").append(courseRs.getString("course_name")).append("\",");
-                json.append("\"faculty_id\":").append(courseRs.getInt("faculty_id")).append(",");
-                json.append("\"department_id\":").append(courseRs.getInt("department_id")).append(",");
-                json.append("\"prerequisites\":").append(fetchPrerequisites(conn, Integer.parseInt(courseId)));
-                json.append("}");
-
-                out.print(json.toString());
-                conn.close();
-            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private String fetchPrerequisites(Connection conn, int courseId) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement(PREREQUISITES_QUERY);
-        stmt.setInt(1, courseId);
-        ResultSet rs = stmt.executeQuery();
-
-        StringBuilder json = new StringBuilder("[");
-        boolean first = true;
-
-        while (rs.next()) {
-            if (!first) json.append(",");
-            json.append("{\"id\":").append(rs.getInt("prerequisite_id"))
-                    .append(",\"name\":\"").append(rs.getString("course_name")).append("\"}");
-            first = false;
+            System.out.println("❌ Database error: " + e.getMessage());
+            response.getWriter().write("{\"success\": false, \"message\": \"Server error: " + e.getMessage() + "\"}");
         }
 
-        json.append("]");
-        return json.toString();
+        try (PrintWriter out = response.getWriter()) {
+            out.print(courseList.toString());
+            out.flush();
+        }
     }
 }

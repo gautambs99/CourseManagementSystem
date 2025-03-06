@@ -26,12 +26,18 @@ public class Constants {
     public static final String COURSE_SEARCH_QUERY = "SELECT course_id, course_name FROM course WHERE course_id = ? OR course_name LIKE ?";
     public static final String COURSE_DETAILS_QUERY = "SELECT * FROM course WHERE course_id = ?";
     public static final String PREREQUISITES_QUERY = "SELECT prerequisite_id, course_name FROM course WHERE course_id = ?";
-    public static final String USER_DETAILS_QUERY = "SELECT u.name, u.email, u.user_id, " +
-            "(SELECT user_id FROM student WHERE user_id = u.user_id LIMIT 1) AS student_id, " +
-            "(SELECT user_id FROM faculty WHERE user_id = u.user_id LIMIT 1) AS faculty_id, " +
-            "(SELECT department_id FROM student WHERE user_id = u.user_id LIMIT 1) AS student_department, " +
-            "(SELECT department_id FROM faculty WHERE user_id = u.user_id LIMIT 1) AS faculty_department " +
-            "FROM user u WHERE u.email = ?";
+    public static final String USER_DETAILS_QUERY =
+            "SELECT u.user_id AS student_id, u.name AS student_name, u.email, " +
+                    "s.department_id AS student_department, " +
+                    "COALESCE(s.advisor_id, 0) AS advisor_id, " +  // ✅ If NULL, return 0
+                    "COALESCE(f.name, 'No Advisor Assigned') AS advisor_name " +  // ✅ Return 'No Advisor Assigned' instead of NULL
+                    "FROM user u " +
+                    "LEFT JOIN student s ON u.user_id = s.user_id " +
+                    "LEFT JOIN faculty f ON s.advisor_id = f.user_id " +
+                    "WHERE u.email = ?";
+
+
+
 
     // Error Messages
     public static final String INVALID_EMAIL = "{\"success\": false, \"message\": \"Invalid email\"}";

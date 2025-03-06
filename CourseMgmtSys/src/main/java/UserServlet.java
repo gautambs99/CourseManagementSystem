@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static Cons.Constants.*;
-
 @WebServlet(USER_SERVLET)
 public class UserServlet extends HttpServlet {
 
@@ -19,9 +18,10 @@ public class UserServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String email = request.getParameter(EMAIL);
+        System.out.println("Received email: " + email);
 
         if (email == null || email.isEmpty()) {
-            response.getWriter().write(INVALID_EMAIL);
+            response.getWriter().write("{\"success\": false, \"message\": \"Invalid email\"}");
             return;
         }
 
@@ -29,30 +29,32 @@ public class UserServlet extends HttpServlet {
              Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(USER_DETAILS_QUERY)) {
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
             stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    String userName = rs.getString("name");
-                    String userEmail = rs.getString("email");
-                    String studentID = rs.getString("student_id");
-                    String facultyID = rs.getString("faculty_id");
-                    String studentDepartment = rs.getString("student_department");
-                    String facultyDepartment = rs.getString("faculty_department");
-                    String userID = (studentID != null) ? studentID : (facultyID != null) ? facultyID : "N/A";
-                    String department = (studentDepartment != null) ? studentDepartment : facultyDepartment;
+            if (rs.next()) {
+                String userName = rs.getString("student_name");
+                String userEmail = rs.getString("email");
+                String studentID = rs.getString("student_id");
+                String department = rs.getString("student_department");
+                int advisorID = rs.getInt("advisor_id");  // ✅ Get advisor_id safely
+                String advisorName = rs.getString("advisor_name");
 
-                    out.print("{\"success\": true, \"name\": \"" + userName + "\", " +
-                            "\"email\": \"" + userEmail + "\", \"userID\": \"" + userID + "\", " +
-                            "\"department\": \"" + (department != null ? department : "N/A") + "\"}");
-                } else {
-                    out.print(USER_NOT_FOUND);
-                }
+                String jsonResponse = String.format(
+                        "{\"success\": true, \"name\": \"%s\", \"email\": \"%s\", \"userID\": \"%s\", \"department\": \"%s\", \"advisor_id\": %d, \"advisor\": \"%s\"}",
+                        userName, userEmail, studentID,
+                        (department != null ? department : "N/A"),
+                        advisorID,
+                        (advisorName != null ? advisorName : "No Advisor Assigned")
+                );
+
+                out.print(jsonResponse);
+            } else {
+                out.print("{\"success\": false, \"message\": \"User not found\"}");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write(SERVER_ERROR);
+            response.getWriter().write("{\"success\": false, \"message\": \"Server error\"}");
         }
     }
 }
