@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch response from ChatGPT API for course-related questions
     async function fetchChatGPTResponse(userMessage) {
-        const apiKey = "YOUR_OPENAI_API_KEY"; // Replace with your OpenAI API key
+        const apiKey = "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"; // Replace with your OpenAI API key
         const url = "https://api.openai.com/v1/chat/completions";
 
         const headers = {

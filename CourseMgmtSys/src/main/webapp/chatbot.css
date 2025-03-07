@@ -49,9 +49,10 @@
 
 /* Chat Body */
 #chat-body {
+    flex: 1;
     color: #1a1a1a;
     padding: 10px;
-    height: 200px;
+    height: 400px;
     overflow-y: auto;
     border-bottom: 1px solid #ccc;
 }

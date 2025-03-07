@@ -1,16 +1,92 @@
 // ✅ Place this function at the top of dashboard.js before it is called
+// ✅ Place this function at the top of dashboard.js before it is called
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("✅ dashboard.js Loaded Successfully!");
+    const userType = sessionStorage.getItem("userType");
 
+    const viewMyCoursesBtn = document.getElementById("view-my-courses-btn");
+    if (userType === "student") {
+    if (viewMyCoursesBtn) {
+        viewMyCoursesBtn.addEventListener("click", fetchStudentCourses);
+    }
+}});
+
+function fetchStudentCourses() {
+    const studentId = sessionStorage.getItem("userID");
+
+    if (!studentId) {
+        console.error("❌ Error: No student ID found in sessionStorage.");
+        return;
+    }
+
+    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/StudentCoursesServlet?userID=${studentId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ Student Courses Data:", data);
+
+            const courseTable = document.getElementById("course-list");
+            if (!courseTable) {
+                console.error("❌ course-list element not found in HTML.");
+                return;
+            }
+
+            courseTable.innerHTML = ""; // ✅ Clear old results
+
+            if (!Array.isArray(data) || data.length === 0) {
+                courseTable.innerHTML = "<tr><td colspan='4'>No enrolled courses found.</td></tr>";
+                return;
+            }
+
+            data.forEach(course => {
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${course.courseID}</td>
+                    <td>${course.courseName}</td>
+                    <td>${course.department}</td>
+                    <td>${getStatusIcon(course.status)}</td>
+                `;
+                courseTable.appendChild(row);
+            });
+
+            console.log("✅ UI Updated with student courses.");
+        })
+        .catch(error => {
+            console.error("❌ Error fetching student courses:", error);
+        });
+}
+
+// ✅ Helper function to determine status icons
+function getStatusIcon(status) {
+    switch (status) {
+        case "Completed":
+            return `<span class="status-icon status-completed">✔️ Completed</span>`;
+        case "Ongoing":
+            return `<span class="status-icon status-in-progress">⏳ Ongoing</span>`;
+        case "Pending":
+            return `<span class="status-icon status-pending">🔜 Pending</span>`;
+        default:
+            return `<span class="status-icon status-not-taken">❌ Not Taken</span>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Page Loaded. Fetching Student Courses...");
+    fetchStudentCourses();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("✅ dashboard.js Loaded Successfully!");
+    const userType = sessionStorage.getItem("userType");
     const bookButton = document.getElementById("book-appointment");
+    if (userType === "student") {
     if (bookButton) {
         bookButton.addEventListener("click", bookAppointment);
         console.log("📌 bookAppointment() event listener added.");
     } else {
         console.error("❌ book-appointment button not found in DOM.");
     }
-});
+}});
 function bookAppointment() {
     console.log("🔄 bookAppointment() function called!");
 
@@ -121,9 +197,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetchFacultyDetails();
         loadStudentAppointments(); // ✅ Now it's properly defined before being used
-    } else if (userType === "faculty") {
+    } /*else if (userType === "faculty") {
         loadFacultyAppointments();
-    }
+    }*/
 
     document.getElementById("logout").addEventListener("click", (e) => {
         e.preventDefault();
@@ -148,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ✅ FIXED: Fetch User Details with error handling
 function fetchUserDetails(email) {
+    const userType = sessionStorage.getItem("userType");
     fetch("http://localhost:8080/CourseMgmtSys_war_exploded/UserServlet", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -168,9 +245,9 @@ function fetchUserDetails(email) {
                 } else {
                     console.warn("⚠️ No assigned faculty advisor.");
                 }
-
-                document.getElementById("profile-advisor").textContent = userData.advisor || "No Advisor Assigned";
-
+                if (userType === "student") {
+                    document.getElementById("profile-advisor").textContent = userData.advisor || "No Advisor Assigned";
+                }
                 updateUserDetails(
                     userData.name || "User",
                     userData.email || "N/A",
@@ -322,44 +399,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ✅ Function to fetch courses based on search input
 function fetchCourses(query = "") {
-    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/CourseServlet?search=${encodeURIComponent(query)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("📡 API Response:", data);
+    const userType = sessionStorage.getItem("userType");
+    if (userType === "student") {
+        fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/CourseServlet?search=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("📡 API Response:", data);
 
-            const courseList = document.getElementById("courses");
-            if (!courseList) {
-                console.error("❌ courses element not found in HTML.");
-                return;
-            }
+                const courseList = document.getElementById("courses");
+                if (!courseList) {
+                    console.error("❌ courses element not found in HTML.");
+                    return;
+                }
 
-            courseList.innerHTML = ""; // ✅ Clear old results
+                courseList.innerHTML = ""; // ✅ Clear old results
 
-            if (!Array.isArray(data) || data.length === 0) {
-                console.warn("⚠️ No courses found.");
-                courseList.innerHTML = "<li>No courses found.</li>";
-                return;
-            }
+                if (!Array.isArray(data) || data.length === 0) {
+                    console.warn("⚠️ No courses found.");
+                    courseList.innerHTML = "<li>No courses found.</li>";
+                    return;
+                }
 
-            // ✅ Display courses as clickable links
-            data.forEach(course => {
-                let li = document.createElement("li");
-                let link = document.createElement("a");
-                link.href = `course-details.html?courseId=${course.id}`;
-                link.textContent = `${course.id} - ${course.name}`;
-                li.appendChild(link);
-                courseList.appendChild(li);
+                // ✅ Display courses as clickable links
+                data.forEach(course => {
+                    let li = document.createElement("li");
+                    let link = document.createElement("a");
+                    link.href = `course-details.html?courseId=${course.id}`;
+                    link.textContent = `${course.id} - ${course.name}`;
+                    li.appendChild(link);
+                    courseList.appendChild(li);
+                });
+
+                console.log("✅ UI Updated with clickable courses.");
+            })
+            .catch(error => {
+                console.error("❌ Error fetching courses:", error);
+                document.getElementById("courses").innerHTML;
             });
-
-            console.log("✅ UI Updated with clickable courses.");
-        })
-        .catch(error => {
-            console.error("❌ Error fetching courses:", error);
-            document.getElementById("courses").innerHTML;
-        });
-}
+    }}
