@@ -4,7 +4,7 @@ public class Constants {
     // Database Credentials
     public static final String DB_URL = "jdbc:mysql://localhost:3306/collegedb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "root123";
+    public static final String DB_PASSWORD = "Anirudh@2000";
 
     // Servlet Endpoints
     public static final String AUTH_SERVLET = "/auth";

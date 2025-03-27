@@ -1,7 +1,0 @@
-what courses are available=We offer various courses in Computer Science, Mathematics, and Engineering.
-what are the prerequisites for cs101=The prerequisites for CS101 are basic mathematics and logic.
-how many credits is cs202=CS202 is a 3-credit course.
-available courses=We offer courses in Computer Science, Mathematics, and Engineering.
-what courses can i choose=You can choose from elective and core courses based on your semester.
-courses=You can browse all courses in your student portal.
-
