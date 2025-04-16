@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const viewMyCoursesBtn = document.getElementById("view-my-courses-btn");
     if (userType === "student") {
-    if (viewMyCoursesBtn) {
-        viewMyCoursesBtn.addEventListener("click", fetchStudentCourses);
-    }
-}});
+        if (viewMyCoursesBtn) {
+            viewMyCoursesBtn.addEventListener("click", fetchStudentCourses);
+        }
+    }});
 
 function fetchStudentCourses() {
     const studentId = sessionStorage.getItem("userID");
@@ -80,13 +80,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const userType = sessionStorage.getItem("userType");
     const bookButton = document.getElementById("book-appointment");
     if (userType === "student") {
-    if (bookButton) {
-        bookButton.addEventListener("click", bookAppointment);
-        console.log("📌 bookAppointment() event listener added.");
-    } else {
-        console.error("❌ book-appointment button not found in DOM.");
-    }
-}});
+        if (bookButton) {
+            bookButton.addEventListener("click", bookAppointment);
+            console.log("📌 bookAppointment() event listener added.");
+        } else {
+            console.error("❌ book-appointment button not found in DOM.");
+        }
+    }});
 function bookAppointment() {
     console.log("🔄 bookAppointment() function called!");
 
@@ -134,6 +134,138 @@ function bookAppointment() {
             document.querySelector(".appointment-message").textContent = "❌ Booking failed due to a server issue.";
         });
 }
+function updateAppointmentStatus(appointmentId, status) {
+    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/AppointmentServlet?appointmentId=${appointmentId}&status=${status}`, {
+        method: "PUT"
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`✅ Appointment ${status}`);
+                loadFacultyAppointments(); // Refresh the faculty view
+
+                // Optional: if you want to refresh student view when applicable
+                if (sessionStorage.getItem("userType") === "student") {
+                    loadStudentAppointments(); // Refresh student dashboard too
+                }
+            } else {
+                alert("❌ Failed to update status.");
+                console.error("⚠️ Response from server:", data.message);
+            }
+        })
+        .catch(error => console.error("❌ Error updating appointment:", error));
+}
+function searchAndDisplayStudent() {
+    const inputField = document.getElementById("student-search");
+    if (!inputField) {
+        console.error("❌ Input field #student-search not found.");
+        return;
+    }
+
+    const query = inputField.value.trim().toLowerCase();
+    const resultDiv = document.getElementById("student-search-result");
+
+    if (query.length < 2) {
+        resultDiv.innerHTML = "";
+        return;
+    }
+
+    fetch("http://localhost:8080/CourseMgmtSys_war_exploded/StudentSearchServlet", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ query: query })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (!data || !data.success) {
+                resultDiv.innerHTML = "<p style='color:red;'>No student found.</p>";
+                return;
+            }
+
+            const student = data.student;
+            const courses = data.courses || [];
+
+            let html = `
+            <h3>👤 ${student.name}</h3>
+            <p><strong>Department:</strong> ${student.department}</p>
+            <h4>📚 Courses</h4>
+            <ul class="course-list">
+                ${courses.map(c => `<li>${c.name} - <span class="course-status ${c.status.toLowerCase()}">${c.status}</span></li>`).join("")}
+            </ul>
+        `;
+
+            resultDiv.innerHTML = html;
+        })
+        .catch(err => {
+            console.error("❌ Error fetching student info:", err);
+            resultDiv.innerHTML = "<p style='color:red;'>Error fetching data</p>";
+        });
+}
+
+function loadFacultyAppointments() {
+    const facultyId = sessionStorage.getItem("userID");
+    if (!facultyId) return;
+
+    fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/FacultyAppointmentsServlet?facultyId=${facultyId}`)
+        .then(response => response.json())
+        .then(data => {
+            const requestsTbody = document.getElementById("faculty-requests-body");
+            const upcomingTbody = document.getElementById("faculty-upcoming-body");
+
+            requestsTbody.innerHTML = "";
+            upcomingTbody.innerHTML = "";
+
+            if (!Array.isArray(data) || data.length === 0) {
+                requestsTbody.innerHTML = "<tr><td colspan='4'>No appointment requests found.</td></tr>";
+                upcomingTbody.innerHTML = "<tr><td colspan='3'>No upcoming appointments.</td></tr>";
+                return;
+            }
+
+            data.forEach(appt => {
+                const dateTime = appt.date || "N/A";
+                const isFinal = appt.status !== "Pending";
+
+                if (appt.status === "Pending") {
+                    const requestRow = document.createElement("tr");
+                    requestRow.innerHTML = `
+                        <td>${appt.student}</td>
+                        <td>${dateTime}</td>
+                        <td>${appt.status}</td>
+                        <td>
+                            <button onclick="updateAppointmentStatus(${appt.appointmentId}, 'Approved')">✅ Approve</button>
+                            <button onclick="updateAppointmentStatus(${appt.appointmentId}, 'Rejected')">❌ Deny</button>
+                        </td>
+                    `;
+                    requestsTbody.appendChild(requestRow);
+                } else if (appt.status === "Approved") {
+                    const upcomingRow = document.createElement("tr");
+                    upcomingRow.innerHTML = `
+                        <td>${appt.student}</td>
+                        <td>${dateTime}</td>
+                        <td>${appt.status}</td>
+                    `;
+                    upcomingTbody.appendChild(upcomingRow);
+                }
+                // Do not show rejected ones
+            });
+        })
+        .catch(error => console.error("❌ Failed to load faculty appointments:", error));
+}
+function filterAppointmentsByStudent() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#faculty-requests-body tr");
+
+    rows.forEach(row => {
+        const studentName = row.children[0]?.textContent.toLowerCase();
+        if (studentName.includes(query)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
 
 function loadStudentAppointments() {
     const studentId = sessionStorage.getItem("userID");
@@ -146,28 +278,43 @@ function loadStudentAppointments() {
     fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/AppointmentServlet?userId=${studentId}`)
         .then(response => response.json())
         .then(data => {
-            console.log("✅ Upcoming Appointments:", data);
+            console.log("✅ Appointments Received:", data);
 
-            const appointmentsList = document.getElementById("student-appointments");
-            if (!appointmentsList) {
-                console.error("❌ student-appointments element not found in DOM.");
-                return;
-            }
+            // Get section containers
+            const requested = document.getElementById("requested-appointments");
+            const approved = document.getElementById("approved-appointments");
+            const rejected = document.getElementById("rejected-appointments");
 
-            appointmentsList.innerHTML = "";
+            requested.innerHTML = "";
+            approved.innerHTML = "";
+            rejected.innerHTML = "";
 
             if (!Array.isArray(data) || data.length === 0) {
-                appointmentsList.innerHTML = "<li>No upcoming appointments.</li>";
+                requested.innerHTML = "<li>No appointment requests found.</li>";
+                approved.innerHTML = "<li>No upcoming appointments.</li>";
+                rejected.innerHTML = "<li>No denied appointments.</li>";
                 return;
             }
 
             data.forEach(appt => {
-                let appointmentDate = appt.date ? new Date(appt.date).toLocaleString() : "No Date";
-                let facultyName = appt.faculty || "Unknown Faculty";
+                const appointmentDate = appt.date ? new Date(appt.date).toLocaleString() : "No Date";
+                const facultyName = appt.faculty || "Faculty";
+                const status = appt.status || "Pending";
 
                 let li = document.createElement("li");
-                li.innerHTML = `<span class="appointment-icon">📅</span> ${appointmentDate} with <strong>${facultyName}</strong>`;
-                appointmentsList.appendChild(li);
+                li.innerHTML = `
+                    <span class="appointment-icon">📅</span>
+                    ${appointmentDate} with <strong>${facultyName}</strong>
+                    <span class="status-badge ${status.toLowerCase()}">(${status})</span>
+                `;
+
+                if (status === "Pending") {
+                    requested.appendChild(li);
+                } else if (status === "Approved") {
+                    approved.appendChild(li);
+                } else if (status === "Rejected") {
+                    rejected.appendChild(li);
+                }
             });
         })
         .catch(error => console.error("❌ Error loading student appointments:", error));
@@ -197,9 +344,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetchFacultyDetails();
         loadStudentAppointments(); // ✅ Now it's properly defined before being used
-    } /*else if (userType === "faculty") {
+    } else if (userType === "faculty") {
         loadFacultyAppointments();
-    }*/
+    }
 
     document.getElementById("logout").addEventListener("click", (e) => {
         e.preventDefault();
@@ -218,8 +365,15 @@ document.addEventListener('DOMContentLoaded', function () {
             showPage(pageId);
             highlightActiveTab(pageId);
             sessionStorage.setItem(`${sessionStorage.getItem("userType")}-lastPage`, pageId);
+
+            // ✅ Trigger load for faculty advising tab
+            const userType = sessionStorage.getItem("userType");
+            if (userType === "faculty" && pageId === "faculty-advising-tab") {
+                loadFacultyAppointments();
+            }
         });
     });
+
 });
 
 // ✅ FIXED: Fetch User Details with error handling

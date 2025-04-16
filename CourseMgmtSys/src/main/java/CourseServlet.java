@@ -116,6 +116,19 @@ public class CourseServlet extends HttpServlet {
                 ResultSet prereqRs = prereqStmt.executeQuery();
 
                 while (prereqRs.next()) {
+
+
+
+
+
+
+
+
+
+
+
+
+
                     JSONObject prereqObj = new JSONObject();
                     prereqObj.put("id", prereqRs.getString("course_id"));
                     prereqObj.put("name", prereqRs.getString("course_name"));

@@ -650,3 +650,69 @@ footer {
 .status-pending {
     color: gray;
 }
+/* Appointment Status Badges */
+.status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 4px;
+    margin-bottom: 6px;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.status-approved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.appointment-message-box {
+    background-color: #f1f1f1;
+    border-left: 4px solid #007bff;
+    padding: 8px 12px;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+}
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.status-badge.pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.approved {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.rejected {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.appointment-block {
+    margin-bottom: 25px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+}

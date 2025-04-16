@@ -15,7 +15,7 @@ public class ChatbotServlet extends HttpServlet {
 
     public static final String DB_URL = "jdbc:mysql://localhost:3306/collegedb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "Anirudh@2000";
+    public static final String DB_PASSWORD = "root123";
     private static final String OPENAI_API_KEY = "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";
 
     @Override
