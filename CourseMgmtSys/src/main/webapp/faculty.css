@@ -453,3 +453,32 @@ table th {
     color: gray;
 }
 
+.search-box {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+#courses,
+#faculty-courses {
+    list-style: none;
+    padding: 0;
+}
+
+#courses li a,
+#faculty-courses li a {
+    display: block;
+    padding: 10px;
+    background: #f4f4f4;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+#courses li a:hover,
+#faculty-courses li a:hover {
+    background-color: #ddd;
+}
