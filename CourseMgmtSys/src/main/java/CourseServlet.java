@@ -91,53 +91,50 @@ public class CourseServlet extends HttpServlet {
         JSONArray prereqArray = new JSONArray();
 
         if (visited.contains(courseId)) {
-            return prereqArray; // Stop infinite loop
+            return prereqArray; // Avoid infinite loops
         }
 
-        visited.add(courseId); // Mark this course as visited
+        visited.add(courseId); // Mark course as visited
 
         PreparedStatement stmt = conn.prepareStatement(
-                "SELECT course_id, course_name, prerequisite_id " +
-                        "FROM course WHERE course_id = ?"
+                "SELECT course_id, course_name, prerequisite_id FROM course WHERE course_id = ?"
         );
-
         stmt.setString(1, courseId);
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            String prerequisiteId = rs.getString("prerequisite_id");
+            String prereqStr = rs.getString("prerequisite_id");
 
-            if (prerequisiteId != null) {
-                PreparedStatement prereqStmt = conn.prepareStatement(
-                        "SELECT course_id, course_name, prerequisite_id " +
-                                "FROM course WHERE course_id = ?"
-                );
-                prereqStmt.setString(1, prerequisiteId);
-                ResultSet prereqRs = prereqStmt.executeQuery();
+            if (prereqStr != null && !prereqStr.trim().isEmpty()) {
+                // Split comma-separated prerequisites
+                String[] prereqIds = prereqStr.split("\\s*,\\s*");
 
-                while (prereqRs.next()) {
+                for (String prereqId : prereqIds) {
+                    PreparedStatement prereqStmt = conn.prepareStatement(
+                            "SELECT course_id, course_name, prerequisite_id FROM course WHERE course_id = ?"
+                    );
+                    prereqStmt.setString(1, prereqId);
+                    ResultSet prereqRs = prereqStmt.executeQuery();
 
+                    while (prereqRs.next()) {
+                        JSONObject prereqObj = new JSONObject();
+                        String pid = prereqRs.getString("course_id");
+                        prereqObj.put("id", pid);
+                        prereqObj.put("name", prereqRs.getString("course_name"));
 
+                        // Recursive fetch for deeper prerequisites
+                        prereqObj.put("prerequisites", fetchPrerequisites(conn, pid, visited));
 
+                        prereqArray.put(prereqObj);
+                    }
 
-
-
-
-
-
-
-
-
-
-                    JSONObject prereqObj = new JSONObject();
-                    prereqObj.put("id", prereqRs.getString("course_id"));
-                    prereqObj.put("name", prereqRs.getString("course_name"));
-                    prereqObj.put("prerequisites", fetchPrerequisites(conn, prereqRs.getString("course_id"), visited));
-                    prereqArray.put(prereqObj);
+                    prereqStmt.close();
                 }
             }
         }
 
+        stmt.close();
         return prereqArray;
     }
+
 }

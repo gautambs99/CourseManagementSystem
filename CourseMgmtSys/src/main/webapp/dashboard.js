@@ -64,7 +64,7 @@ function getStatusIcon(status) {
         case "Ongoing":
             return `<span class="status-icon status-in-progress">⏳ Ongoing</span>`;
         case "Pending":
-            return `<span class="status-icon status-pending">🔜 Pending</span>`;
+            return `<span class="status-icon status-pending">🔜 Not Completed</span>`;
         default:
             return `<span class="status-icon status-not-taken">❌ Not Taken</span>`;
     }
@@ -122,7 +122,7 @@ function bookAppointment() {
             console.log("✅ Parsed response:", data);
 
             if (data.success) {
-                document.querySelector(".appointment-message").textContent = "📅 Appointment booked successfully!";
+                document.querySelector(".appointment-message").textContent = "📅 Appointment requested successfully!";
                 loadStudentAppointments(); // Refresh appointment list
             } else {
                 document.querySelector(".appointment-message").textContent = "❌ Booking failed. Please try again.";
@@ -391,7 +391,9 @@ function fetchUserDetails(email) {
             if (userData.success) {
                 sessionStorage.setItem("userID", userData.userID);
                 sessionStorage.setItem("userEmail", userData.email);
-
+                if (userType === "student"){
+                    fetchStudentCourses();
+                }
                 // ✅ Store advisor_id only if it's not 0
                 if (userData.advisor_id && userData.advisor_id !== 0) {
                     sessionStorage.setItem("facultyId", userData.advisor_id);
@@ -497,17 +499,17 @@ function getStatusIcon(status) {
         case "Ongoing":
             return `<span class="status-icon status-in-progress">⏳ Ongoing</span>`;
         case "Pending":
-            return `<span class="status-icon status-pending">🔜 Pending</span>`;
+            return `<span class="status-icon status-pending">🔜 Not Completed</span>`;
         default:
             return `<span class="status-icon status-not-taken">❌ Not Taken</span>`;
     }
 }
 
 // ✅ Call function when page loads
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("🚀 Page Loaded. Fetching Courses...");
-    fetchCourses();
-});
+//document.addEventListener("DOMContentLoaded", function () {
+  //  console.log("🚀 Page Loaded. Fetching Courses...");
+    //fetchCourses();
+//});
 
 // ✅ FIXED: Highlight Active Tab
 function highlightActiveTab(pageId) {

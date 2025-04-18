@@ -6,10 +6,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/abstract-wallpaper-preview.jpg-QqjVUFKnz3beOMHbuAovyJdFWYicLj.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: #ffffff; /* Plain white background */
 }
 
 .container {
@@ -64,7 +61,6 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
   background-repeat: no-repeat;
   background-position-x: 98%;
   background-position-y: 50%;
@@ -111,4 +107,3 @@ button:hover {
     font-size: 1rem;
   }
 }
-

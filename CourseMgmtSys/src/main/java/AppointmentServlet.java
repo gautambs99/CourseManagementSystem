@@ -53,7 +53,7 @@ public class AppointmentServlet extends HttpServlet {
 
             if (result > 0) {
                 System.out.println("✅ Appointment successfully stored in database.");
-                out.print("{\"success\": true, \"message\": \"Appointment booked successfully\"}");
+                out.print("{\"success\": true, \"message\": \"Appointment requested successfully\"}");
             } else {
                 System.out.println("❌ Database insert failed.");
                 out.print("{\"success\": false, \"message\": \"Failed to book appointment\"}");

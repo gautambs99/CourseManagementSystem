@@ -16,7 +16,7 @@ public class ChatbotServlet extends HttpServlet {
     public static final String DB_URL = "jdbc:mysql://localhost:3306/collegedb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     public static final String DB_USER = "root";
     public static final String DB_PASSWORD = "root123";
-    private static final String OPENAI_API_KEY = "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";
+    private static final String OPENAI_API_KEY = "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";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -135,8 +135,7 @@ public class ChatbotServlet extends HttpServlet {
             JsonObject systemMessage = new JsonObject();
             systemMessage.addProperty("role", "system");
             systemMessage.addProperty("content",
-                    "You are a course advisor assistant. ONLY use the provided database schema and course data to answer. " +
-                            "If the user's question is not related to university courses, reply: 'I can only assist with course-related questions.'");
+                    "You are a course advisor chatbot for a university website. When students ask questions, respond in a friendly and helpful tone using only the available course and faculty information. Avoid technical terms like 'query', 'table', or 'schema'. Instead, explain things clearly as if you are speaking to a student who is browsing the site to find information about their courses and instructors.");
 
             // 👤 User prompt
             JsonObject userMessage = new JsonObject();
