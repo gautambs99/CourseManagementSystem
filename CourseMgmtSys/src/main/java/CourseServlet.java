@@ -106,7 +106,6 @@ public class CourseServlet extends HttpServlet {
             String prereqStr = rs.getString("prerequisite_id");
 
             if (prereqStr != null && !prereqStr.trim().isEmpty()) {
-                // Split comma-separated prerequisites
                 String[] prereqIds = prereqStr.split("\\s*,\\s*");
 
                 for (String prereqId : prereqIds) {
@@ -122,8 +121,9 @@ public class CourseServlet extends HttpServlet {
                         prereqObj.put("id", pid);
                         prereqObj.put("name", prereqRs.getString("course_name"));
 
-                        // Recursive fetch for deeper prerequisites
-                        prereqObj.put("prerequisites", fetchPrerequisites(conn, pid, visited));
+                        // ✅ Use a new copy of visited for each branch
+                        JSONArray subPrereqs = fetchPrerequisites(conn, pid, new HashSet<>(visited));
+                        prereqObj.put("prerequisites", subPrereqs);
 
                         prereqArray.put(prereqObj);
                     }
@@ -136,5 +136,4 @@ public class CourseServlet extends HttpServlet {
         stmt.close();
         return prereqArray;
     }
-
 }
