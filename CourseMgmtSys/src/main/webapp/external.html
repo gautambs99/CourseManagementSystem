@@ -31,39 +31,46 @@
             top: 0;
             left: 0;
         }
-
         .profile-icon {
             cursor: pointer;
             background-color: white;
             color: #600000;
-            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-right: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 60px;
-            right: 20px;
+            top: 45px;
+            right: 0px;
             background: white;
             border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-size: 0.8rem;
+            min-width: 110px;
+            z-index: 100;
         }
 
         .dropdown-menu a {
             display: block;
-            padding: 10px 15px;
+            padding: 8px 12px;
             text-decoration: none;
             color: #600000;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         .dropdown-menu a:hover {
-            background-color: #ddd;
+            background-color: #f2f2f2;
         }
 
         .show {

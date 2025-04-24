@@ -1,148 +1,175 @@
-/* General Page Styling */
+
+    /* General Layout */
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #d3d3d3, #f5f5f5);
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f9f9f9 50%, #900 50%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 400px;
+    height: 400px;
+    background: url('https://www.svgrepo.com/show/448151/education-book.svg') no-repeat center center;
+    background-size: contain;
+    opacity: 0.08;
+    z-index: 1;
 }
 
 /* Container Styling */
 .container {
-    display: flex;
-    width: 750px;
-    height: 500px;
     background: white;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    padding: 50px 40px;
+    width: 420px;
+    max-width: 90%;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 10;
+    animation: fadeIn 0.8s ease-in-out;
+    box-sizing: border-box;
 }
 
-/* Left Panel (Welcome Section) */
-.left-panel {
-    width: 40%;
-    background: #007bff;
-    color: white;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    border-radius: 15px 0 0 15px;
-    box-shadow: inset 0px 0px 8px rgba(255, 255, 255, 0.2); /* Soft glow effect */
-}
-
-.left-panel h1 {
-    font-size: 22px;
-    font-weight:bold;
-    margin-bottom: 10px;
-}
-
-.left-panel p {
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-.left-panel i {
-    font-size: 28px;
-    margin-bottom: 10px;
-    color: #ffffff;
-    opacity: 0.9;
-}
-/* Right Panel (Login Section) */
-.right-panel {
-    width: 60%;
-    padding: 40px;
+.container h1 {
+    color: #900;
+    font-size: 24px;
+    margin-bottom: 8px;
     text-align: center;
 }
 
-.right-panel h1 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.right-panel h2 {
+.container h2 {
     font-size: 18px;
-    margin-bottom: 20px;
+    color: #900;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 25px;
 }
 
-/* Input Groups */
+/* Input Styling */
 .input-group {
-    margin-bottom: 15px;
-    text-align: left;
+    margin-bottom: 20px;
 }
 
 .input-group label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    color: #333;
 }
 
-.input-group input,
-.input-group select {
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input,
+.input-wrapper select {
     width: 100%;
-    padding: 10px;
+    height: 42px;
+    padding-left: 42px;
+    font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 10px;
+    background-color: #fefefe;
+    transition: border 0.2s ease-in-out;
+    box-sizing: border-box;
 }
 
-/* Forgot Password */
-.forgot-password {
-    display: block;
-    text-align: right;
-    font-size: 14px;
-    margin-top: 5px;
-    color: #007bff;
-    text-decoration: none;
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+    border-color: #900;
+    outline: none;
+    box-shadow: 0 0 4px rgba(144, 0, 0, 0.3);
 }
 
-.forgot-password:hover {
-    text-decoration: underline;
+/* Icon Styling */
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    fill: #888;
+    pointer-events: none;
 }
 
-/* Login Button */
+/* Button Styling */
 .login-btn {
     width: 100%;
-    background: #007bff;
-    color: white;
     padding: 12px;
+    background-color: #900;
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: background 0.3s ease;
 }
 
 .login-btn:hover {
-    background: #0056b3;
+    background-color: #700;
 }
 
-/* Info Message */
-.info-message {
+.login-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.2), transparent, rgba(255,255,255,0.2));
+    transition: left 0.8s;
+    z-index: 0;
+}
+
+.login-btn:hover::after {
+    left: 100%;
+}
+
+/* Subtext */
+.subtext {
+    text-align: center;
     font-size: 14px;
-    margin-top: 10px;
-    color: gray;
+    color: #555;
+    margin-top: 20px;
+    line-height: 1.5;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Animation */
+@keyframes fadeIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
     .container {
-        flex-direction: column;
-        width: 90%;
-        height: auto;
+        padding: 30px;
     }
 
-    .left-panel {
-        width: 100%;
-        border-radius: 15px 15px 0 0;
-    }
-
-    .right-panel {
-        width: 100%;
-        padding: 20px;
+    body::before {
+        display: none;
     }
 }

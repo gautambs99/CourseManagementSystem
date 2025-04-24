@@ -208,12 +208,19 @@ function loadFacultyAppointments() {
     const facultyId = sessionStorage.getItem("userID");
     if (!facultyId) return;
 
+    // ✅ Ensure DOM is ready
+    const requestsTbody = document.getElementById("faculty-requests-body");
+    const upcomingTbody = document.getElementById("faculty-upcoming-body");
+
+    if (!requestsTbody || !upcomingTbody) {
+        console.warn("⏳ Appointment table elements not found. Retrying in 300ms...");
+        setTimeout(loadFacultyAppointments, 300); // Retry after slight delay
+        return;
+    }
+
     fetch(`http://localhost:8080/CourseMgmtSys_war_exploded/FacultyAppointmentsServlet?facultyId=${facultyId}`)
         .then(response => response.json())
         .then(data => {
-            const requestsTbody = document.getElementById("faculty-requests-body");
-            const upcomingTbody = document.getElementById("faculty-upcoming-body");
-
             requestsTbody.innerHTML = "";
             upcomingTbody.innerHTML = "";
 
@@ -225,7 +232,6 @@ function loadFacultyAppointments() {
 
             data.forEach(appt => {
                 const dateTime = appt.date || "N/A";
-                const isFinal = appt.status !== "Pending";
 
                 if (appt.status === "Pending") {
                     const requestRow = document.createElement("tr");
@@ -248,7 +254,6 @@ function loadFacultyAppointments() {
                     `;
                     upcomingTbody.appendChild(upcomingRow);
                 }
-                // Do not show rejected ones
             });
         })
         .catch(error => console.error("❌ Failed to load faculty appointments:", error));
@@ -266,6 +271,26 @@ function filterAppointmentsByStudent() {
         }
     });
 }
+document.querySelectorAll(".tab-link").forEach(link => {
+    link.addEventListener("click", function (e) {
+        e.preventDefault();
+        const pageId = this.getAttribute("data-page");
+        showPage(pageId);
+        highlightActiveTab(pageId);
+        sessionStorage.setItem(`${sessionStorage.getItem("userType")}-lastPage`, pageId);
+
+        const userType = sessionStorage.getItem("userType");
+
+        // 👇 Call again on tab switch for students too
+        if (userType === "faculty" && pageId === "faculty-advising-tab") {
+            loadFacultyAppointments();
+        }
+
+        if (userType === "student" && pageId === "student-advising-tab") {
+            loadStudentAppointments(); // ✅ add this!
+        }
+    });
+});
 
 function loadStudentAppointments() {
     const studentId = sessionStorage.getItem("userID");
@@ -297,16 +322,18 @@ function loadStudentAppointments() {
             }
 
             data.forEach(appt => {
+                console.log("🧪 Rendering appointment:", appt); // ✅ Add this line
+
                 const appointmentDate = appt.date ? new Date(appt.date).toLocaleString() : "No Date";
                 const facultyName = appt.faculty || "Faculty";
                 const status = appt.status || "Pending";
 
                 let li = document.createElement("li");
                 li.innerHTML = `
-                    <span class="appointment-icon">📅</span>
-                    ${appointmentDate} with <strong>${facultyName}</strong>
-                    <span class="status-badge ${status.toLowerCase()}">(${status})</span>
-                `;
+        <span class="appointment-icon">📅</span>
+        ${appointmentDate} with <strong>${facultyName}</strong>
+        <span class="status-badge ${status.toLowerCase()}">(${status})</span>
+    `;
 
                 if (status === "Pending") {
                     requested.appendChild(li);
@@ -316,6 +343,7 @@ function loadStudentAppointments() {
                     rejected.appendChild(li);
                 }
             });
+
         })
         .catch(error => console.error("❌ Error loading student appointments:", error));
 }

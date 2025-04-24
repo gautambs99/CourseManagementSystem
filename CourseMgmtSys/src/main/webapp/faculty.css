@@ -67,7 +67,7 @@ body {
 }
 
 .navigation ul li a.active {
-    border-bottom: 3px solid white;
+   /* border-bottom: 3px solid white;*/
     font-weight: bold;
     color: yellow;
 }

@@ -41,7 +41,7 @@ public class StudentCoursesServlet extends HttpServlet {
             String sql = "SELECT " +
                     "    c.course_id, " +
                     "    c.course_name, " +
-                    "    c.department_id, " +
+                    "    d.dept_name AS department, " +
                     "    CASE " +
                     "        WHEN FIND_IN_SET(c.course_id, s.completed_courses) > 0 THEN 'Completed' " +
                     "        WHEN FIND_IN_SET(c.course_id, s.enrolled_courses) > 0 THEN 'Ongoing' " +
@@ -51,10 +51,11 @@ public class StudentCoursesServlet extends HttpServlet {
                     "FROM " +
                     "    student s " +
                     "JOIN " +
-                    "    course c " +
-                    "    ON FIND_IN_SET(c.course_id, CONCAT(s.completed_courses, ',', s.enrolled_courses, ',', s.to_do_courses)) > 0 " +
+                    "    course c ON FIND_IN_SET(c.course_id, CONCAT(s.completed_courses, ',', s.enrolled_courses, ',', s.to_do_courses)) > 0 " +
+                    "JOIN " +
+                    "    department d ON c.department_id = d.department_id " +
                     "WHERE " +
-                    "    s.user_id = ?";  // Only one parameter
+                    "    s.user_id = ?";
 
 
 
@@ -78,7 +79,7 @@ public class StudentCoursesServlet extends HttpServlet {
                 }
                 json.append("{\"courseID\":\"").append(rs.getString("course_id"))
                         .append("\", \"courseName\":\"").append(rs.getString("course_name"))
-                        .append("\", \"department\":\"").append(rs.getString("department_id"))
+                        .append("\", \"department\":\"").append(rs.getString("department"))
                         .append("\", \"status\":\"").append(rs.getString("status"))
                         .append("\"}");
                 first = false;
